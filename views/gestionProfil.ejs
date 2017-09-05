@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImprimShirt</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet"
+          type="text/css">
+    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+</head>
+
+<body>
+<div id="app">
+    <v-app>
+        <v-navigation-drawer persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer">
+            <v-list>
+                <v-list-tile v-for="(item, i) in items" :key="i" v-bind:href="item.link" value="true">
+                    <v-list-tile-action>
+                        <v-icon light v-html="item.icon"></v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title v-text="item.title"></v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+        </v-navigation-drawer>
+        <v-toolbar>
+            <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+
+        </v-toolbar>
+        <main>
+            <v-container fluid style="    position: relative;
+    top: 2em;">
+                <v-container fluid>
+                    <v-slide-y-transition mode="out-in">
+                        <v-layout column align-center>
+                            <template>
+                                <v-card class="grey lighten-4 elevation-1">
+
+                                    <v-card-text>
+                                        <v-container fluid>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Nom de l'utilisateur</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.name"
+                                                                  label="Entrez votre nom" id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Prénom de l'utilisateur</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.firstname"
+                                                                  label="Entrez votre prénom" id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Pays</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.country"
+                                                                  label="Entrez votre pays" id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Ville</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.city"
+                                                                  label="Entrez votre ville" id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Addresse</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.address"
+                                                                  label="Entrez votre addresse"
+                                                                  id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Date de naissance</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.birthdate"
+                                                                  label="Entrez votre date de naissance : ex JJ/MM/AAAA"
+                                                                  id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-btn primary @click.native="updateUserProfil">Enregistrer les
+                                                modifications
+                                            </v-btn>
+                                        </v-container>
+                                    </v-card-text>
+                                </v-card>
+                            </template>
+                        </v-layout>
+                    </v-slide-y-transition>
+                </v-container>
+            </v-container>
+        </main>
+
+        <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'"
+                    :left="x === 'left'" :multi-line="mode === 'multi-line'"
+                    :vertical="mode === 'vertical'" v-model="showErrorForm">
+            Les champs suivants sont manquants : {{ errorForm }}
+            <v-btn flat class="pink--text" @click.native="showErrorForm = false">Fermer</v-btn>
+        </v-snackbar>
+
+        <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'"
+                    :left="x === 'left'" :multi-line="mode === 'multi-line'"
+                    :vertical="mode === 'vertical'" v-model="successUpdate">
+            Vos données ont été modifiés avec succés.
+            <v-btn flat class="pink--text" @click.native="successUpdate = false">Fermer</v-btn>
+        </v-snackbar>
+        <v-footer class="pa-3">
+            <v-spacer></v-spacer>
+            <div>© ImprimShirt {{ new Date().getFullYear() }}</div>
+        </v-footer>
+    </v-app>
+</div>
+
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.4/vue-resource.min.js"></script>
+<script>
+    var isConnected = sessionStorage.getItem("dataKey");
+    console.log(isConnected);
+
+    if (isConnected === "" || isConnected === null) {
+        window.location.href = "/";
+    }
+
+    else {
+        Vue.component('page', {
+            template: '#page'
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                clipped: false,
+                drawer: true,
+                fixed: false,
+                baseUrlCurrentUser: "https://transfertprod-668c2.firebaseio.com/user/",
+                items: [
+                    {icon: "note_add", title: "Personnaliser un produit", link: "/product"},
+                    {icon: "shopping_cart", title: "Panier", link : "/cart"},
+                    {icon: 'account_circle', title: 'Gestion du profil', link: "/gestionProfil"},
+                    {icon: 'shopping_basket', title: 'Suivi des commandes'}
+                ],
+                currentUser: {},
+                y: 'bottom',
+                x: null,
+                mode: '',
+                timeout: 4000,
+                errorArray: [],
+                successUpdate: false,
+                errorForm: "",
+                showErrorForm: false,
+                miniVariant: false,
+                right: true,
+                title: 'ImprimShirt'
+            },
+            methods: {
+                checkForm: function () {
+                    this.errorArray = [];
+                    let user = this.currentUser;
+                    if (user.name === "") {
+                        this.errorArray.push("Nom");
+                    }
+                    if (user.firstname === "") {
+                        this.errorArray.push("Prénom");
+                    }
+                    if (user.country === "") {
+                        this.errorArray.push("Pays");
+                    }
+                    if (user.city === "") {
+                        this.errorArray.push("Ville");
+                    }
+                    if (user.address === "") {
+                        this.errorArray.push("Addresse");
+                    }
+                    if (user.birthdate === "") {
+                        this.errorArray.push("Date de naissance");
+                    }
+                },
+                updateUserProfil: function () {
+                    this.checkForm();
+                    if (this.errorArray.length > 0) {
+                        this.errorForm = this.errorArray.toString();
+                        return this.showErrorForm = true;
+                    }
+                    return this.$http.put(this.baseUrlCurrentUser + isConnected + ".json", this.currentUser).then((resp) => {
+                        this.getCurrentUser();
+                        return this.successUpdate = true;
+                    })
+
+                },
+                getCurrentUser: function () {
+                    return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
+                        this.currentUser = currentUser.data;
+                    });
+                }
+            }
+        });
+
+
+        vm.getCurrentUser();
+
+    }
+</script>
+</body>
+
+</html>

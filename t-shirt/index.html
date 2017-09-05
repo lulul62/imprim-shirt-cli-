@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+
+
+    <!-- Le styles -->
+    <link type="text/css" rel="stylesheet" href="css/jquery.miniColors.css"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+
+
+    <script type="text/javascript">
+    </script>
+    <style type="text/css">
+        body {
+            background: none;
+        }
+
+        .color-preview {
+            border: 1px solid #CCC;
+            margin: 2px;
+            zoom: 1;
+            vertical-align: top;
+            display: inline-block;
+            cursor: pointer;
+            overflow: hidden;
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-tabs>.active>a, .nav-tabs>.active>a:hover {
+            color: #555555;
+            background-color: #ffffff;
+            border: 1px solid transparent;
+            border-bottom-color: transparent;
+            cursor: default;
+        }
+
+        .rotate {
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
+            -ms-transform: rotate(90deg);
+        }
+
+        .Arial {
+            font-family: "Arial";
+        }
+
+        .Helvetica {
+            font-family: "Helvetica";
+        }
+
+        .MyriadPro {
+            font-family: "Myriad Pro";
+        }
+
+        .Delicious {
+            font-family: "Delicious";
+        }
+
+        .Verdana {
+            font-family: "Verdana";
+        }
+
+        .Georgia {
+            font-family: "Georgia";
+        }
+
+        .Courier {
+            font-family: "Courier";
+        }
+
+        .ComicSansMS {
+            font-family: "Comic Sans MS";
+        }
+
+        .Impact {
+            font-family: "Impact";
+        }
+
+        .Monaco {
+            font-family: "Monaco";
+        }
+
+        .Optima {
+            font-family: "Optima";
+        }
+
+        .HoeflerText {
+            font-family: "Hoefler Text";
+        }
+
+        .Plaster {
+            font-family: "Plaster";
+        }
+
+        .Engagement {
+            font-family: "Engagement";
+        }
+
+        select, input[type="file"] {
+            height: 30px;
+            display: grid !important;
+            line-height: 30px;
+        }
+
+        .modal.fade.in {
+            top: 30%;
+        }
+
+
+
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            /* max-height: 400px; */
+            position: relative;
+            padding: 15px;
+            top: 0em;
+        }
+
+
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1040;
+            background-color: black;
+        }
+
+        .well {
+            min-height: 20px;
+            padding: 19px;
+            margin-bottom: 20px;
+            background-color: white;
+            border : 0;
+            /*border: 1px solid #e3e3e3;$
+            */
+            /* -webkit-border-radius: 4px; */
+            /*-moz-border-radius: 4px;*/
+             border-radius: 0px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        }
+
+        .nav-tabs {
+            border-bottom: 0px solid transparent;
+        }
+    </style>
+</head>
+<div style="    position: relative;
+    top: 2em;" id="app">
+    <body class="preview" data-spy="scroll" data-target=".subnav" data-offset="80">
+    <!-- Navbar
+      ================================================== -->
+    <div class="container">
+        <section id="typography">
+
+
+            <!-- Headings & Paragraph Copy -->
+            <div class="row">
+                <div class="span3">
+
+                    <div class="tabbable"> <!-- Only required for left/right tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active" style="background: white;
+    color: black; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            "><a href="#tab1" data-toggle="tab">Option du produit</a></li>
+                            <li style="background: white;
+    color: black;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            "><a href="#tab2" data-toggle="tab">Image</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div class="well">
+                                    <!--					      	<h3>Tee Styles</h3>-->
+                                    <!--						      <p>-->
+                                    <h5>Produit :</h5>
+                                    <select class="mdb-select" v-model="selectedItemKey">
+                                        <option value="1" selected="selected" v-bind:value="item.key"
+                                                v-for="item in productList">{{item.nom}}
+                                        </option>
+                                    </select>
+                                    <input type="button" v-on:click="changeProduct" class="btn btn-primary"
+                                           value="Changer de produit">
+                                    <!--						      </p>-->
+                                </div>
+                                <div class="well">
+                                    <h5>Genre :</h5>
+                                    <select class="mdb-select" v-model="userProduct.gender">
+
+                                        <option value="homme" selected="selected">Homme</option>
+                                        <option value="femme">Femme</option>
+                                    </select>
+                                    <!--						      </p>-->
+                                </div>
+                                <div class="well">
+                                    <!--					      	<h3>Tee Styles</h3>-->
+                                    <!--						      <p>-->
+                                    <h5>Taille :</h5>
+                                    <select class="mdb-select" id="size" v-model="selectedItem.size">
+                                        <option v-for="size in size" v-bind:value="size">{{size}}</option>
+                                    </select>
+                                    <!--						      </p>-->
+                                </div>
+                                <div class="well">
+                                    <!--					      	<h3>Tee Styles</h3>-->
+                                    <!--						      <p>-->
+                                    <h5>Style :</h5>
+                                    <select class="mdb-select" id="style" v-model="selectedItem.style">
+                                        <option v-bind:value="selectedItem.style">{{selectedItem.style}}</option>
+                                    </select>
+                                    <!--						      </p>-->
+                                </div>
+
+
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <div class="well">
+                                    <h5>Ajouter un texte</h5>
+                                    <div class="input-append">
+                                        <input class="span2" id="text-string" type="text"
+                                               placeholder="Inscrivez votre texte ici">
+                                        <button id="add-text" class="btn" title="Add text"><i
+                                                class="icon-share-alt"></i></button>
+                                        <hr>
+
+                                    </div>
+
+
+                                    <div id="avatarlist">
+                                        <h5>Importer un visuel</h5>
+                                        <label class="btn btn-default btn-file">
+                                            Parcourir... <input type='file' style="display: none"
+                                                                onchange="readURL(this);"/>
+                                        </label>
+                                        <img style="display: none" v-show='userProduct.design !== ""' id="blah"
+                                             src="#"/>
+                                        <input type="button" v-on:click="addPersonnalVisual" value="Valider"
+                                               class="btn btn-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div align="center" style="min-height: 32px;">
+                        <div class="clearfix">
+                            <div class="btn-group inline pull-left" id="texteditor" style="display:none; z-index: 9999999999999999999;">
+                                <button id="font-family" class="btn dropdown-toggle" data-toggle="dropdown"
+                                        title="Font Style"><i class="icon-font" style="width:19px;height:19px;"></i>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="font-family-X">
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Arial');" class="Arial">Arial</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Helvetica');" class="Helvetica">Helvetica</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Myriad Pro');" class="MyriadPro">Myriad
+                                        Pro</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Delicious');" class="Delicious">Delicious</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Verdana');"
+                                           class="Verdana">Verdana</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Georgia');"
+                                           class="Georgia">Georgia</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Courier');"
+                                           class="Courier">Courier</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Comic Sans MS');"
+                                           class="ComicSansMS">Comic Sans MS</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Impact');" class="Impact">Impact</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Monaco');" class="Monaco">Monaco</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Optima');" class="Optima">Optima</a>
+                                    </li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Hoefler Text');"
+                                           class="Hoefler Text">Hoefler Text</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Plaster');"
+                                           class="Plaster">Plaster</a></li>
+                                    <li><a tabindex="-1" href="#" onclick="setFont('Engagement');" class="Engagement">Engagement</a>
+                                    </li>
+                                </ul>
+                                <button id="text-bold" class="btn" data-original-title="Bold"><img
+                                        src="img/font_bold.png" height="" width=""></button>
+                                <button id="text-italic" class="btn" data-original-title="Italic"><img
+                                        src="img/font_italic.png" height="" width=""></button>
+                                <button id="text-strike" class="btn" title="Strike" style=""><img
+                                        src="img/font_strikethrough.png" height="" width=""></button>
+                                <button id="text-underline" class="btn" title="Underline" style=""><img
+                                        src="img/font_underline.png"></button>
+                                <a class="btn" href="#" rel="tooltip" data-placement="top"
+                                   data-original-title="Font Color"><input type="hidden" id="text-fontcolor"
+                                                                           class="color-picker" size="7"
+                                                                           value="#000000"></a>
+                                <a class="btn" href="#" rel="tooltip" data-placement="top"
+                                   data-original-title="Font Border Color"><input type="hidden" id="text-strokecolor"
+                                                                                  class="color-picker" size="7"
+                                                                                  value="#000000"></a>
+                                <!--- Background <input type="hidden" id="text-bgcolor" class="color-picker" size="7" value="#ffffff"> --->
+                            </div>
+                            <div class="pull-right" align="" id="imageeditor" style="display:none;">
+                                <div style="z-index: 9999999999999999" class="btn-group">
+                                    <button class="btn" id="bring-to-front" title="Envoyer le visuel à l'avant"><i
+                                            class="icon-fast-backward rotate" style="height:19px;"></i></button>
+                                    <button class="btn" id="send-to-back" title="Envoyer le visuel à l'arrière"><i
+                                            class="icon-fast-forward rotate" style="height:19px;"></i></button>
+                                    <button v-on:click="showOtherSideOfProduct" type="button" class="btn"
+                                            title="Changer de face"><i class="icon-retweet" style="height:19px;"></i>
+                                    </button>
+                                    <button id="remove-selected" class="btn" title="Supprimer le visuel selectioné"><i
+                                            class="icon-trash" style="height:19px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--	EDITOR      -->
+                    <div class="well">
+                        <div id="shirtDiv" class="page"
+                             style="position: relative; background-color: rgb(255, 255, 255);">
+                            <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
+                                 v-bind:src="selectedItem.firstProductImg">
+                            <div id="drawingArea"
+                                 style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;">
+                                <canvas id="tcanvas" width=200 height="400" class="hover"
+                                        style="-webkit-user-select: none;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Large modal -->
+
+
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+                         aria-labelledby="myLargeModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Confirmation de l'ajout du produit au
+                                        panier</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="well">
+                                        <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
+                                             v-bind:src="selectedItem.firstProductImg">
+                                        <div id="drawingArea"
+                                             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;">
+                                            <canvas id="tcanvas" width=200 height="400" class="hover"
+                                                    style="-webkit-user-select: none;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                    <button type="button" v-on:click.stop="addProductToCart($event)" class="btn btn-primary">Valider</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--							-->
+
+                    <!--	/EDITOR		-->
+                </div>
+
+                <div class="span3">
+                    <div style="position: relative;" class="well">
+                        <h3>Prix</h3>
+                        <p>
+                        <table class="table">
+                            <tr>
+                                <td>{{selectedItem.nom}} x{{userProduct.quantity}}</td>
+                                <td id="price" align="right">{{selectedItem.prix * userProduct.quantity}}€</td>
+                            </tr>
+
+                        </table>
+                        </p>
+                        <button type="button" data-toggle="modal" data-target=".bs-example-modal-lg"
+                                class="btn btn-large btn-block btn-success" name="addToTheBag" id="addToTheBag">Ajouter
+                            au panier <i class="icon-briefcase icon-white"></i></button>
+                    </div>
+
+                    <div class="well">
+                        <h5>Couleur :</h5>
+                        <ul class="nav">
+                            <button class="color-preview" v-for="color in selectedItem.couleur"
+                                    v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
+                                    title="color" v-bind:style='{"background-color": color}'></button>
+
+                        </ul>
+                    </div>
+                    <div class="well">
+                        <h5>Quantité :</h5>
+                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
+                    </div>
+                    <div class="well">
+                        <h5>Gamme :</h5>
+                        <select id="gamme" v-model="selectedItem.gamme">
+                            <option>{{selectedItem.gamme}}</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </div><!-- /container -->
+
+</div>
+
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script src="https://cdn.jsdelivr.net/vue.resource/1.2.0/vue-resource.min.js"></script>
+<script type="text/javascript" src="js/vueIndex.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
+<script type="text/javascript" src="js/fabric.js"></script>
+<script type="text/javascript" src="js/tshirtEditor.js"></script>
+
+
+<script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
