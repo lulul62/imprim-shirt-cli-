@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login ImprimShirt</title>
+
+
+  <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300'>
+  <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="/stylesheets/style.css">
+
+
+</head>
+
+<body>
+<div id="login">
+  <template>
+    <v-app id="example-3" standalone>
+
+      <v-toolbar class="white" dark>
+        <v-toolbar-title>
+          <div style="color : black;">ImprimShirt</div>
+        </v-toolbar-title>
+      </v-toolbar>
+      <main>
+
+        <div class="cotn_principal">
+          <div class="cont_centrar">
+
+            <div class="cont_login">
+              <div class="cont_info_log_sign_up">
+                <div class="col_md_login">
+                  <div class="cont_ba_opcitiy">
+
+                    <h2>J'ai un compte</h2>
+                    <p>Connectez-vous afin d'accéder à notre service</p>
+                    <button class="btn_login" onclick="cambiar_login()">Connexion</button>
+                  </div>
+                </div>
+                <div class="col_md_sign_up">
+                  <div class="cont_ba_opcitiy">
+                    <h2>Je n'ai pas de compte</h2>
+
+
+                    <p>Inscrivez vous afin d'accéder à nos services</p>
+
+                    <button class="btn_sign_up" onclick="cambiar_sign_up()">Inscription</button>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="cont_back_info">
+                <div class="cont_img_back_grey">
+                  <img src="https://s-media-cache-ak0.pinimg.com/originals/23/e2/b4/23e2b49f01af665ca530166080e3258f.jpg" alt="" />
+                </div>
+
+              </div>
+              <div class="cont_forms">
+                <div class="cont_img_back_">
+                  <img src="https://s-media-cache-ak0.pinimg.com/originals/23/e2/b4/23e2b49f01af665ca530166080e3258f.jpg" alt="" />
+                </div>
+                <div class="cont_form_login">
+                  <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                  <h2>Je me connecte</h2>
+                  <input v-model="userToConnect.email" type="email" placeholder="Adresse email" />
+                  <input v-model="userToConnect.password" type="password" placeholder="Mot de passe" />
+                  <v-btn primary  @click.native="connectUser">Connexion</v-btn>
+                </div>
+
+                <div class="cont_form_sign_up">
+                  <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                  <h2>Créer un compte</h2>
+                  <input v-model="newUser.email" type="email" placeholder="Adresse email" />
+                  <input v-model="newUser.name" type="text" placeholder="Nom" />
+                  <input v-model="newUser.password" type="password" placeholder="Mot de passe" />
+                  <input v-model="passwordComparator" type="password" placeholder="Confirmer le mot de passe" />
+                  <v-btn primary  @click.native="createNewUser">Inscription</v-btn>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </v-app>
+  </template>
+
+  <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
+              :vertical="mode === 'vertical'" v-model="showSamePasswordNotification">
+    Les mots de passe ne correspondent pas.
+    <v-btn flat class="yellow--text" @click.native="showSamePasswordNotification = false">Fermer</v-btn>
+  </v-snackbar>
+  <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
+              :vertical="mode === 'vertical'" v-model="showSuccessCreateAccountNotification">
+    Bienvenue sur ImprimShirt {{newUser.name}}, vous allez etre redirigé sur notre application dans quelques instants.
+    <v-btn flat class="yellow--text" @click.native="showSuccessCreateAccountNotification = false">Fermer</v-btn>
+  </v-snackbar>
+  <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
+              :vertical="mode === 'vertical'" v-model="showEmptyFormNotification">
+    Les champs suivant sont manquants : {{errorArrayString}}
+    <v-btn flat class="yellow--text" @click.native="showEmptyFormNotification = false">Fermer</v-btn>
+  </v-snackbar>
+  <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
+              :vertical="mode === 'vertical'" v-model="incorrectLogin">
+    L'addresse email ou le mot de passe sont incorrects.
+    <v-btn flat class="yellow--text" @click.native="incorrectLogin = false">Fermer</v-btn>
+  </v-snackbar>
+</div>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+<script src="/javascripts/login.js"></script>
+<script src="/javascripts/index.js"></script>
+
+</body>
+
+</html>
