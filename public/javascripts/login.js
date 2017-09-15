@@ -53,7 +53,7 @@ let vm = new Vue({
                         sessionStorage.setItem("dataKey", vm.newUser.userkey);
                         vm.newUser = {};
                         return setTimeout(() => {
-                            window.location.href = "gestionProfil.html"
+                            window.location.href = "/gestionProfil"
                         }, 4000)
                     })
                 })

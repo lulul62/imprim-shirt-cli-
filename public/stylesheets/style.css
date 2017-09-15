@@ -412,3 +412,8 @@ main {
   text-align: left;
 }
 
+.navigation-drawer>.list:not(.list--dense) .list__tile {
+  font-size: 14px;
+  color: #3d3d3d;
+}
+
