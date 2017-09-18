@@ -7,7 +7,6 @@ let vm = new Vue({
             selectedItem: {},
             userProduct: {
                 color: "",
-                name: "",
                 price: "",
                 visual: "",
                 design: "",
@@ -23,7 +22,7 @@ let vm = new Vue({
             visualIndex: 0,
             indexOfImg: 0,
             baseUrlFilterProduct: "https://transfertprod-668c2.firebaseio.com/produitList",
-            size: ["XS", "S", "M", "L", "XL", "XXL"],
+            tailles: [],
             gamme: [],
             style: [],
             color: [],
@@ -53,9 +52,7 @@ let vm = new Vue({
             vm.selectedItemKey = vm.selectedItem.key;
             vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].base64;
             vm.productColor = vm.selectedItem.couleur[0];
-            vm.userProduct.name = vm.selectedItem.nom;
             vm.userProduct.color = vm.selectedItem.couleur[0];
-
         },
 
         /**
@@ -154,14 +151,47 @@ let vm = new Vue({
             });
         },
 
-        addProductToCart : function ($event) {
-            console.log();
+
+        checkBeforeAddToCart: function () {
+            vm.errorCart = [];
+            if (vm.userProduct.gender === "") {
+                vm.errorCart.push('Genre');
+            }
+            if (vm.userProduct.size === "") {
+                vm.errorCart.push(' Taille')
+            }
+        },
+
+        /**
+         * Ajoute un produit au panier.
+         * @param $event
+         * @returns {*}
+         */
+        addProductToCart: function ($event) {
             vm.userProduct.price = $("#price").text();
             vm.userProduct.style = $("#style")[0].value;
             vm.userProduct.size = $("#size")[0].value;
-            console.log(vm.userProduct);
+            vm.userProduct.gamme = vm.selectedItem.gamme;
+            vm.userProduct.visual = $("#tshirtFacing").attr('src');
+            this.checkBeforeAddToCart();
+            if (vm.errorCart.length > 0) {
+                return swal('Oups :-(', 'Les informations suivantes sont manquantes : ' + vm.errorCart.toString(), 'error');
+            }
+            else {
+                vm.currentCart = [];
+                if (localStorage.getItem('cart') !== null) {
+                    vm.currentCart = localStorage.getItem('cart');
+                    vm.currentCart = JSON.parse(vm.currentCart);
+                }
+                vm.currentCart.push(vm.userProduct);
+                localStorage.setItem('cart', JSON.stringify(vm.currentCart));
+                swal(
+                    '',
+                    'Votre produit à été ajouté au panier',
+                    'success'
+                )
+            }
         }
-
     }
 });
 

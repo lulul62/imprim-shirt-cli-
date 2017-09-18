@@ -12,6 +12,7 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <!--[if IE]>
+
     <script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
 
 
@@ -19,6 +20,7 @@
     <link type="text/css" rel="stylesheet" href="css/jquery.miniColors.css"/>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
 
 
     <script type="text/javascript">
@@ -179,6 +181,13 @@
         .nav-tabs {
             border-bottom: 0px solid transparent;
         }
+
+        input.swal2-file {
+            display: none!important;
+        }
+       select.swal2-select {
+            display: none!important;
+        }
     </style>
 </head>
 <div style="    position: relative;
@@ -232,7 +241,7 @@
                                     <!--						      <p>-->
                                     <h5>Taille :</h5>
                                     <select class="mdb-select" id="size" v-model="selectedItem.size">
-                                        <option v-for="size in size" v-bind:value="size">{{size}}</option>
+                                        <option v-for="size in selectedItem.tailles" v-bind:value="size">{{size}}</option>
                                     </select>
                                     <!--						      </p>-->
                                 </div>
@@ -252,7 +261,7 @@
                                 <div class="well">
                                     <h5>Ajouter un texte</h5>
                                     <div class="input-append">
-                                        <input class="span2" id="text-string" type="text"
+                                        <input v-model="userProduct.text" class="span2" id="text-string" type="text"
                                                placeholder="Inscrivez votre texte ici">
                                         <button id="add-text" class="btn" title="Add text"><i
                                                 class="icon-share-alt"></i></button>
@@ -362,43 +371,6 @@
                         </div>
                     </div>
 
-                    <!-- Large modal -->
-
-
-                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-                         aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Confirmation de l'ajout du produit au
-                                        panier</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="well">
-                                        <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
-                                             v-bind:src="selectedItem.firstProductImg">
-                                        <div id="drawingArea"
-                                             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;">
-                                            <canvas id="tcanvas" width=200 height="400" class="hover"
-                                                    style="-webkit-user-select: none;"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                                    <button type="button" v-on:click.stop="addProductToCart($event)"
-                                            class="btn btn-primary">Valider
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--							-->
-
-                    <!--	/EDITOR		-->
                 </div>
 
                 <div class="span3">
@@ -414,7 +386,7 @@
                         </table>
                         </p>
                         <button type="button" data-toggle="modal" data-target=".bs-example-modal-lg"
-                                class="btn btn-large btn-block btn-success" name="addToTheBag" id="addToTheBag">Ajouter
+                                class="btn btn-large btn-block btn-success" v-on:click.stop="addProductToCart()" name="addToTheBag" id="addToTheBag">Ajouter
                             au panier <i class="icon-briefcase icon-white"></i></button>
                     </div>
 
@@ -447,7 +419,7 @@
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
 </body>
