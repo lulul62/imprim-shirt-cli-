@@ -405,11 +405,11 @@
                         return swal('Erreur', 'Le paiment de votre commande à échoué', 'error');
 
                     }
-                    let userkey = this.currentUser.userKey;
+
+
 
                     delete this.currentUser.password;
                     delete this.currentUser.birthdate;
-                    delete this.currentUser.userkey;
 
                     let order = {
                         reference: this.guid(),
@@ -418,7 +418,7 @@
                         order_date: new Date(),
                         state: "En cours de préparation"
                     }
-                    this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + userkey + '/orders.json', order).then(function () {
+                    this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function () {
                         swal({
                             title: 'Validation du paiement de votre commande',
                             text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes",
