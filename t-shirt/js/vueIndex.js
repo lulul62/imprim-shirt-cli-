@@ -50,7 +50,7 @@ let vm = new Vue({
          */
         instanciateObject: function () {
             vm.selectedItemKey = vm.selectedItem.key;
-            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].base64;
+            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
             vm.productColor = vm.selectedItem.couleur[0];
             vm.userProduct.color = vm.selectedItem.couleur[0];
         },
@@ -110,7 +110,7 @@ let vm = new Vue({
             }
 
             $(this).attr('data-original-title', 'Show Front View');
-            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].base64);
+            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex]);
             a = JSON.stringify(canvas);
             canvas.clear();
             try {
@@ -169,7 +169,6 @@ let vm = new Vue({
          */
         addProductToCart: function ($event) {
             vm.userProduct.price = $("#price").text();
-            vm.userProduct.style = $("#style")[0].value;
             vm.userProduct.size = $("#size")[0].value;
             vm.userProduct.gamme = vm.selectedItem.gamme;
             vm.userProduct.visual = $("#tshirtFacing").attr('src');
@@ -185,11 +184,25 @@ let vm = new Vue({
                 }
                 vm.currentCart.push(vm.userProduct);
                 localStorage.setItem('cart', JSON.stringify(vm.currentCart));
-                swal(
-                    '',
-                    'Votre produit à été ajouté au panier',
-                    'success'
-                )
+                swal({
+                    title: '',
+                    text: "Votre produit à été ajouté au panier",
+                    type: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Voir mon panier',
+                    cancelButtonText: 'Continuer mes achats',
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-info',
+                    buttonsStyling: false
+                }).then(function () {
+
+                    return window.top.location.href = "/cart";
+                }, function (dismiss) {
+                    if (dismiss === 'cancel') {
+                    }
+                })
             }
         }
     }

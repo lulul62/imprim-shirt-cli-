@@ -32,6 +32,9 @@
         </v-navigation-drawer>
         <v-toolbar>
             <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-title>Panier</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>Imprim-shirt</v-toolbar-title>
 
         </v-toolbar>
         <main>
@@ -159,7 +162,7 @@
                                                             required
                                                     ></v-text-field>
                                                     <v-text-field
-                                                            label="Adresse de livraison"
+                                                            label="Numéro de téléphone"
                                                             v-model="currentUser.telephone"
                                                             required
                                                     ></v-text-field>
@@ -219,15 +222,13 @@
 
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.4/vue-resource.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 <script>
     var isConnected = sessionStorage.getItem("dataKey");
-    console.log(isConnected);
-
     if (isConnected === "" || isConnected === null) {
         window.location.href = "/";
     }
@@ -272,15 +273,14 @@
                  * Inititalisation du panier avec les item présents en sessions.
                  * @returns {string}
                  */
-                checkEmptyCart: function () {
+                checkEmptyCart() {
                     if (localStorage.getItem('cart') !== null) {
                         vm.cart = JSON.parse(localStorage.getItem('cart'));
                         let sumOfProduct = [];
-                        vm.cart.forEach(function (item) {
+                        vm.cart.forEach((item) => {
                             sumOfProduct.push(parseInt(item.quantity));
                         })
                         vm.numberOfItem = _.sum(sumOfProduct);
-                        console.log(vm.numberOfItem);
                     }
                     else {
                         return vm.cartTitle = "Votre panier est vide :("
@@ -290,12 +290,12 @@
                 /**
                  * Vide le panier en cours pour l"utilisateur
                  */
-                destroyCart: function () {
+                destroyCart() {
                     if (vm.cart === undefined || vm.cart.length === 0) {
                         return swal('', 'Votre panier est vide', 'error');
                     }
                     swal({
-                        title: 'Etes vous sûr de vouloir vider votre panier?',
+                        title: 'Etes-vous sûr de vouloir vider votre panier?',
                         text: "Vous perdrez l'ensemble des produits ajoutés",
                         type: 'warning',
                         showCancelButton: true,
@@ -319,7 +319,7 @@
                  * Passe à l'étape de validation des informations de l'utilisateur
                  * @returns {*}
                  */
-                acceptCart: function () {
+                acceptCart() {
                     if (vm.cart === undefined || vm.cart.length === 0) {
                         return swal('', 'Votre panier est vide', 'error');
                     }
@@ -332,7 +332,7 @@
                  * Récupere les informations de l'utilisateur connecté
                  * @returns {Promise.<TResult>}
                  */
-                getCurrentUser: function () {
+                getCurrentUser() {
                     return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
                         this.currentUser = currentUser.data;
                     });
@@ -341,7 +341,7 @@
                 /**
                  * Check des informations du formulaire
                  */
-                checkForm: function () {
+                checkForm() {
                     this.errorArray = [];
                     let user = this.currentUser;
                     if (user.name === "") {
@@ -374,7 +374,7 @@
                  * Passe à l'étape de paiment
                  * @returns {Promise.<TResult>}
                  */
-                goToPayment: function () {
+                goToPayment() {
                     this.checkForm();
                     if (this.errorArray.length > 0) {
                         return swal('Erreur', 'Des informations sont manaquantes : ' + this.errorArray.toString(), 'error');
@@ -388,7 +388,7 @@
                  * Retourne à l'étape précedente.
                  * @returns {number}
                  */
-                cancel: function () {
+                cancel() {
                     if (vm.e1 = 2) {
                         return vm.e1 = 1;
                     }
@@ -400,17 +400,13 @@
                 /**
                  * Callback de retour de systemPay et convertit le panier de l'utilisateur en commande.
                  */
-                convertCartToOrder: function () {
+                convertCartToOrder() {
                     if (this.paymentIsValidated !== true) {
-                        return swal('Erreur', 'Le paiment de votre commande à échoué', 'error');
+                        return swal('Erreur', 'Le paiement de votre commande à échoué', 'error');
 
                     }
-
-
-
                     delete this.currentUser.password;
                     delete this.currentUser.birthdate;
-
                     let order = {
                         reference: this.guid(),
                         customerInformation: vm.currentUser,

@@ -20,7 +20,8 @@
     <link type="text/css" rel="stylesheet" href="css/jquery.miniColors.css"/>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
 
 
     <script type="text/javascript">
@@ -183,10 +184,11 @@
         }
 
         input.swal2-file {
-            display: none!important;
+            display: none !important;
         }
-       select.swal2-select {
-            display: none!important;
+
+        select.swal2-select {
+            display: none !important;
         }
     </style>
 </head>
@@ -241,20 +243,11 @@
                                     <!--						      <p>-->
                                     <h5>Taille :</h5>
                                     <select class="mdb-select" id="size" v-model="selectedItem.size">
-                                        <option v-for="size in selectedItem.tailles" v-bind:value="size">{{size}}</option>
+                                        <option v-for="size in selectedItem.tailles" v-bind:value="size">{{size}}
+                                        </option>
                                     </select>
                                     <!--						      </p>-->
                                 </div>
-                                <div class="well">
-                                    <!--					      	<h3>Tee Styles</h3>-->
-                                    <!--						      <p>-->
-                                    <h5>Style :</h5>
-                                    <select class="mdb-select" id="style" v-model="selectedItem.style">
-                                        <option v-bind:value="selectedItem.style">{{selectedItem.style}}</option>
-                                    </select>
-                                    <!--						      </p>-->
-                                </div>
-
 
                             </div>
                             <div class="tab-pane" id="tab2">
@@ -287,7 +280,7 @@
                     </div>
                 </div>
                 <div class="span6">
-                    <div align="center" style="min-height: 32px;">
+                    <div align="center">
                         <div class="clearfix">
                             <div class="btn-group inline pull-left" id="texteditor"
                                  style="display:none; z-index: 9999999999999999999;">
@@ -375,33 +368,33 @@
 
                 <div class="span3">
                     <div style="position: relative;" class="well">
-                        <h3>Prix</h3>
+                        <h5>Quantité :</h5>
+                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
+                        <h5>Prix</h5>
                         <p>
                         <table class="table">
                             <tr>
-                                <td>{{selectedItem.nom}} x{{userProduct.quantity}}</td>
+                                <td>{{selectedItem.gamme}} x{{userProduct.quantity}}</td>
                                 <td id="price" align="right">{{selectedItem.prix * userProduct.quantity}}€</td>
                             </tr>
 
                         </table>
+
                         </p>
                         <button type="button" data-toggle="modal" data-target=".bs-example-modal-lg"
-                                class="btn btn-large btn-block btn-success" v-on:click.stop="addProductToCart()" name="addToTheBag" id="addToTheBag">Ajouter
+                                class="btn btn-large btn-block btn-success" v-on:click.stop="addProductToCart()"
+                                name="addToTheBag" id="addToTheBag">Ajouter
                             au panier <i class="icon-briefcase icon-white"></i></button>
                     </div>
 
                     <div class="well">
-                        <h5>Couleur :</h5>
+                        <h5>Couleurs disponibles :</h5>
                         <ul class="nav">
                             <button class="color-preview" v-for="color in selectedItem.couleur"
                                     v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
                                     title="color" v-bind:style='{"background-color": color}'></button>
 
                         </ul>
-                    </div>
-                    <div class="well">
-                        <h5>Quantité :</h5>
-                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
                     </div>
                 </div>
 
@@ -419,7 +412,8 @@
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
 </body>
