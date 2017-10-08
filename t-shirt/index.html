@@ -12,6 +12,7 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <!--[if IE]>
+
     <script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
 
 
@@ -19,6 +20,8 @@
     <link type="text/css" rel="stylesheet" href="css/jquery.miniColors.css"/>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
 
 
     <script type="text/javascript">
@@ -40,7 +43,7 @@
             height: 20px;
         }
 
-        .nav-tabs>.active>a, .nav-tabs>.active>a:hover {
+        .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
             color: #555555;
             background-color: #ffffff;
             border: 1px solid transparent;
@@ -122,8 +125,6 @@
             top: 30%;
         }
 
-
-
         .btn-file {
             position: relative;
             overflow: hidden;
@@ -153,8 +154,6 @@
             top: 0em;
         }
 
-
-
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -170,18 +169,26 @@
             padding: 19px;
             margin-bottom: 20px;
             background-color: white;
-            border : 0;
+            border: 0;
             /*border: 1px solid #e3e3e3;$
             */
             /* -webkit-border-radius: 4px; */
             /*-moz-border-radius: 4px;*/
-             border-radius: 0px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            border-radius: 0px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
         }
 
         .nav-tabs {
             border-bottom: 0px solid transparent;
+        }
+
+        input.swal2-file {
+            display: none !important;
+        }
+
+        select.swal2-select {
+            display: none !important;
         }
     </style>
 </head>
@@ -215,7 +222,7 @@
                                     <h5>Produit :</h5>
                                     <select class="mdb-select" v-model="selectedItemKey">
                                         <option value="1" selected="selected" v-bind:value="item.key"
-                                                v-for="item in productList">{{item.nom}}
+                                                v-for="item in productList">{{item.gamme}}
                                         </option>
                                     </select>
                                     <input type="button" v-on:click="changeProduct" class="btn btn-primary"
@@ -236,27 +243,18 @@
                                     <!--						      <p>-->
                                     <h5>Taille :</h5>
                                     <select class="mdb-select" id="size" v-model="selectedItem.size">
-                                        <option v-for="size in size" v-bind:value="size">{{size}}</option>
+                                        <option v-for="size in selectedItem.tailles" v-bind:value="size">{{size}}
+                                        </option>
                                     </select>
                                     <!--						      </p>-->
                                 </div>
-                                <div class="well">
-                                    <!--					      	<h3>Tee Styles</h3>-->
-                                    <!--						      <p>-->
-                                    <h5>Style :</h5>
-                                    <select class="mdb-select" id="style" v-model="selectedItem.style">
-                                        <option v-bind:value="selectedItem.style">{{selectedItem.style}}</option>
-                                    </select>
-                                    <!--						      </p>-->
-                                </div>
-
 
                             </div>
                             <div class="tab-pane" id="tab2">
                                 <div class="well">
                                     <h5>Ajouter un texte</h5>
                                     <div class="input-append">
-                                        <input class="span2" id="text-string" type="text"
+                                        <input v-model="userProduct.text" class="span2" id="text-string" type="text"
                                                placeholder="Inscrivez votre texte ici">
                                         <button id="add-text" class="btn" title="Add text"><i
                                                 class="icon-share-alt"></i></button>
@@ -284,7 +282,8 @@
                 <div class="span6">
                     <div align="center" style="min-height: 32px;">
                         <div class="clearfix">
-                            <div class="btn-group inline pull-left" id="texteditor" style="display:none; z-index: 9999999999999999999;">
+                            <div class="btn-group inline pull-left" id="texteditor"
+                                 style="display:none; z-index: 9999999999999999999;">
                                 <button id="font-family" class="btn dropdown-toggle" data-toggle="dropdown"
                                         title="Font Style"><i class="icon-font" style="width:19px;height:19px;"></i>
                                 </button>
@@ -365,78 +364,37 @@
                         </div>
                     </div>
 
-                    <!-- Large modal -->
-
-
-                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-                         aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Confirmation de l'ajout du produit au
-                                        panier</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="well">
-                                        <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
-                                             v-bind:src="selectedItem.firstProductImg">
-                                        <div id="drawingArea"
-                                             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;">
-                                            <canvas id="tcanvas" width=200 height="400" class="hover"
-                                                    style="-webkit-user-select: none;"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                                    <button type="button" v-on:click.stop="addProductToCart($event)" class="btn btn-primary">Valider</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--							-->
-
-                    <!--	/EDITOR		-->
                 </div>
 
                 <div class="span3">
                     <div style="position: relative;" class="well">
-                        <h3>Prix</h3>
+                        <h5>Quantité :</h5>
+                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
+                        <h5>Prix</h5>
                         <p>
                         <table class="table">
                             <tr>
-                                <td>{{selectedItem.nom}} x{{userProduct.quantity}}</td>
+                                <td>{{selectedItem.gamme}} x{{userProduct.quantity}}</td>
                                 <td id="price" align="right">{{selectedItem.prix * userProduct.quantity}}€</td>
                             </tr>
 
                         </table>
+
                         </p>
                         <button type="button" data-toggle="modal" data-target=".bs-example-modal-lg"
-                                class="btn btn-large btn-block btn-success" name="addToTheBag" id="addToTheBag">Ajouter
+                                class="btn btn-large btn-block btn-success" v-on:click.stop="addProductToCart()"
+                                name="addToTheBag" id="addToTheBag">Ajouter
                             au panier <i class="icon-briefcase icon-white"></i></button>
                     </div>
 
                     <div class="well">
-                        <h5>Couleur :</h5>
+                        <h5>Couleurs disponibles :</h5>
                         <ul class="nav">
                             <button class="color-preview" v-for="color in selectedItem.couleur"
                                     v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
                                     title="color" v-bind:style='{"background-color": color}'></button>
 
                         </ul>
-                    </div>
-                    <div class="well">
-                        <h5>Quantité :</h5>
-                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
-                    </div>
-                    <div class="well">
-                        <h5>Gamme :</h5>
-                        <select id="gamme" v-model="selectedItem.gamme">
-                            <option>{{selectedItem.gamme}}</option>
-                        </select>
                     </div>
                 </div>
 
@@ -454,7 +412,8 @@
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
-
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
 </body>
