@@ -11,16 +11,42 @@
     <link href="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
 </head>
 
 <body>
+<style>
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0
+    }
+    .well {
+        min-height: 20px;
+        padding: 19px;
+        margin-bottom: 20px;
+        background-color: white;
+        border: 0;
+        /*border: 1px solid #e3e3e3;$
+        */
+        /* -webkit-border-radius: 4px; */
+        /*-moz-border-radius: 4px;*/
+        border-radius: 0px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    }
+</style>
 <div id="app">
+
     <v-app>
         <v-navigation-drawer persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer">
             <v-list>
                 <v-list-tile v-for="(item, i) in items" :key="i" v-bind:href="item.link" value="true">
                     <v-list-tile-action>
-                        <v-icon light v-html="item.icon"></v-icon>
+                        <v-icon secondary v-html="item.icon"></v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
                         <v-list-tile-title v-text="item.title"></v-list-tile-title>
@@ -30,6 +56,9 @@
         </v-navigation-drawer>
         <v-toolbar>
             <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-title>Panier</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>Imprim-shirt</v-toolbar-title>
 
         </v-toolbar>
         <main>
@@ -37,72 +66,179 @@
     top: 2em;">
                 <v-container fluid>
                     <v-slide-y-transition mode="out-in">
-                            <template>
-                                <div>
-                                    <v-stepper v-model="e1">
-                                        <v-stepper-header>
-                                            <v-stepper-step step="1" :complete="e1 > 1">Validation du panier</v-stepper-step>
-                                            <v-divider></v-divider>
-                                            <v-stepper-step step="2" :complete="e1 > 2">Vérification des informations de livraison</v-stepper-step>
-                                            <v-divider></v-divider>
-                                            <v-stepper-step step="3">Paiement</v-stepper-step>
-                                        </v-stepper-header>
-                                        <v-stepper-content step="1">
-                                            <template>
-                                                <v-flex xs12 sm12 offset-sm0>
-                                                    <v-card>
-                                                        <v-toolbar class="primary white--text" dark>
-                                                            <v-toolbar-side-icon><v-icon>shopping_cart</v-icon></v-toolbar-side-icon>
-                                                            <v-toolbar-title>{{cartTitle}}</v-toolbar-title>
-                                                            <v-spacer></v-spacer>
+                        <template>
+                            <div>
+                                <v-stepper v-model="e1">
+                                    <v-stepper-header>
+                                        <v-stepper-step step="1" :complete="e1 > 1">Validation du panier
+                                        </v-stepper-step>
+                                        <v-divider></v-divider>
+                                        <v-stepper-step step="2" :complete="e1 > 2">Vérification des informations de
+                                            livraison
+                                        </v-stepper-step>
+                                        <v-divider></v-divider>
+                                        <v-stepper-step step="3">Paiement</v-stepper-step>
+                                    </v-stepper-header>
+                                    <v-stepper-content step="1">
+                                        <template>
+                                            <v-flex xs12 sm12 offset-sm0>
+                                                <v-card>
+                                                    <v-toolbar class="secondary white--text" dark>
+                                                        <v-toolbar-side-icon>
+                                                            <v-icon>shopping_cart</v-icon>
+                                                        </v-toolbar-side-icon>
+                                                        <v-toolbar-title>Nombre de produits : {{numberOfItem}}
+                                                        </v-toolbar-title>
+                                                        <v-spacer></v-spacer>
 
-                                                        </v-toolbar>
-                                                        <v-list>
-                                                            <v-list-group v-for="item in item" :value="item.active"
-                                                                          v-bind:key="item.title">
-                                                                <v-list-tile slot="item">
-                                                                    <v-list-tile-action>
-                                                                        <v-icon>{{ item.action }}</v-icon>
-                                                                    </v-list-tile-action>
-                                                                    <v-list-tile-content>
-                                                                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                                                                    </v-list-tile-content>
-                                                                    <v-list-tile-action>
-                                                                        <v-icon>keyboard_arrow_down</v-icon>
-                                                                    </v-list-tile-action>
-                                                                </v-list-tile>
-                                                                <v-list-tile v-for="subItem in item.items"
-                                                                             v-bind:key="subItem.title">
-                                                                    <v-list-tile-content>
-                                                                        <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
-                                                                    </v-list-tile-content>
-                                                                    <v-list-tile-action>
-                                                                        <v-icon>{{ subItem.action }}</v-icon>
-                                                                    </v-list-tile-action>
-                                                                </v-list-tile>
-                                                            </v-list-group>
-                                                        </v-list>
-                                                    </v-card>
-                                                </v-flex>
+                                                    </v-toolbar>
+                                                    <v-list>
+                                                        <v-list-group v-for="item in cart" :value="item.gamme"
+                                                                      v-bind:key="item.gamme">
+                                                            <v-list-tile slot="item">
+                                                                <v-list-tile-action>
+                                                                    <v-icon>loyalty</v-icon>
+                                                                </v-list-tile-action>
+                                                                <v-list-tile-content>
+                                                                    <v-list-tile-title>{{ item.gamme }} x
+                                                                        {{item.quantity}}
+                                                                    </v-list-tile-title>
+                                                                </v-list-tile-content>
+                                                                <v-list-tile-action>
+                                                                    <v-icon>keyboard_arrow_down</v-icon>
+                                                                </v-list-tile-action>
+                                                            </v-list-tile>
+
+
+                                                                                <v-card center height="650px">
+                                                                                    <v-card-text>
+                                                                                        <div id="visual">
+                                                                                            <div id="shirtDiv"
+                                                                                                 class="page"
+                                                                                                 style="position: relative; background-color: rgb(255, 255, 255);">
+                                                                                                <img style
+                                                                                                     id="tshirtFacing"
+                                                                                                     v-bind:style="{background : item.color, position : 'absolute'}"
+                                                                                                     v-bind:src="item.visual.shape">
+                                                                                                <div style="width: 200px;height: 400px;">
+                                                                                                    <img style="    position: absolute; left: 165px;
+    top: 7em;
+   " v-bind:src="item.visual.design">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </v-card-text>
+                                                                                </v-card>
+
+
+                                                            <v-list-tile>
+                                                                <v-list-tile-content>
+                                                                    <v-list-tile-title> Sexe : {{ item.gender }}
+                                                                    </v-list-tile-title>
+
+
+                                                                </v-list-tile-content>
+                                                            </v-list-tile>
+                                                            <v-list-tile>
+                                                                <v-list-tile-content>
+                                                                    <v-list-tile-title> Taille : {{ item.size }}
+                                                                    </v-list-tile-title>
+
+                                                                </v-list-tile-content>
+                                                            </v-list-tile>
+                                                            <v-list-tile>
+                                                                <v-list-tile-content>
+                                                                    <v-list-tile-title> Prix : {{ item.price }} €
+                                                                    </v-list-tile-title>
+
+                                                                </v-list-tile-content>
+                                                            </v-list-tile>
+
+                                                        </v-list-group>
+                                                    </v-list>
+                                                </v-card>
+                                            </v-flex>
+                                        </template>
+                                        <div>
+                                            <v-btn primary @click.native="acceptCart()">
+                                                <v-icon light>check_circle</v-icon>
+                                                valider mon panier
+                                            </v-btn>
+                                            <v-btn warning @click.native="destroyCart()">
+                                                <v-icon light>delete_forever</v-icon>
+                                                Vider mon panier
+                                            </v-btn>
+                                        </div>
+                                    </v-stepper-content>
+                                    <v-stepper-content step="2">
+                                        <v-card>
+                                            <template>
+                                                <v-form>
+                                                    <v-text-field
+                                                            label="Adresse email"
+                                                            v-model="currentUser.email"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Nom"
+                                                            v-model="currentUser.name"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Prénom"
+                                                            v-model="currentUser.firstname"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Numéro de téléphone"
+                                                            v-model="currentUser.telephone"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Pays"
+                                                            v-model="currentUser.country"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Code postal"
+                                                            v-model="currentUser.postalCode"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Ville"
+                                                            v-model="currentUser.city"
+                                                            required
+                                                    ></v-text-field>
+                                                    <v-text-field
+                                                            label="Adresse de livraison"
+                                                            v-model="currentUser.address"
+                                                            required
+                                                    ></v-text-field>
+                                                </v-form>
                                             </template>
-                                            <div v-show="cartTitle !== 'Votre panier est vide :('">
-                                            <v-btn primary @click.native="e1 = 2">Étape suivante</v-btn>
-                                            <v-btn flat>Annuler</v-btn>
-                                            </div>
-                                        </v-stepper-content>
-                                        <v-stepper-content step="2">
-                                            <v-card class="grey lighten-1 z-depth-1 mb-5" height="200px"></v-card>
-                                            <v-btn primary @click.native="e1 = 3">Continue</v-btn>
-                                            <v-btn flat>Cancel</v-btn>
-                                        </v-stepper-content>
-                                        <v-stepper-content step="3">
-                                            <v-card class="grey lighten-1 z-depth-1 mb-5" height="200px"></v-card>
-                                            <v-btn primary @click.native="e1 = 1">Continue</v-btn>
-                                            <v-btn flat>Cancel</v-btn>
-                                        </v-stepper-content>
-                                    </v-stepper>
-                                </div>
-                            </template>
+                                        </v-card>
+                                        <v-btn primary @click.native="goToPayment()">
+                                            <v-icon light>check_circle</v-icon>
+                                            Valider
+                                        </v-btn>
+                                        <v-btn warning @click.native="cancel()">
+                                            <v-icon light>skip_previous</v-icon>
+                                            Retour au panier
+                                        </v-btn>
+                                    </v-stepper-content>
+                                    <v-stepper-content step="3">
+                                        <v-btn primary @click.native="convertCartToOrder()">
+                                            <v-icon light>check_circle</v-icon>
+                                            Accéder au paiment
+                                        </v-btn>
+                                        <v-btn warning @click.native="cancel()">
+                                            <v-icon light>skip_previous</v-icon>
+                                            Informations de livraison
+                                        </v-btn>
+                                    </v-stepper-content>
+                                </v-stepper>
+                            </div>
+                        </template>
                     </v-slide-y-transition>
                 </v-container>
             </v-container>
@@ -114,34 +250,22 @@
                 <div>© ImprimShirt {{ new Date().getFullYear() }}</div>
             </v-footer>
         </template>
-        <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'"
-                    :left="x === 'left'" :multi-line="mode === 'multi-line'"
-                    :vertical="mode === 'vertical'" v-model="showErrorForm">
-            Les champs suivants sont manquants : {{ errorForm }}
-            <v-btn flat class="pink--text" @click.native="showErrorForm = false">Fermer</v-btn>
-        </v-snackbar>
-
-        <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'"
-                    :left="x === 'left'" :multi-line="mode === 'multi-line'"
-                    :vertical="mode === 'vertical'" v-model="successUpdate">
-            Vos données ont été modifiés avec succés.
-            <v-btn flat class="pink--text" @click.native="successUpdate = false">Fermer</v-btn>
-        </v-snackbar>
     </v-app>
 </div>
 
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.4/vue-resource.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
+
 <script>
     var isConnected = sessionStorage.getItem("dataKey");
-    console.log(isConnected);
-
     if (isConnected === "" || isConnected === null) {
         window.location.href = "/";
     }
-
     else {
         Vue.component('page', {
             template: '#page'
@@ -158,34 +282,216 @@
                     {icon: "note_add", title: "Personnaliser un produit", link: "/product"},
                     {icon: "shopping_cart", title: "Panier", link: "/cart"},
                     {icon: 'account_circle', title: 'Gestion du profil', link: "/gestionProfil"},
-                    {icon: 'shopping_basket', title: 'Suivi des commandes'}
+                    {icon: 'shopping_basket', title: 'Suivi des commandes', link: '/orders'}
                 ],
                 item: [],
                 currentUser: {},
                 y: 'bottom',
                 x: null,
                 mode: '',
-                cartTitle : "Panier",
+                e1: 1,
+                cartTitle: "",
+                dialog: false,
                 timeout: 4000,
+                paymentIsValidated: true,
                 errorArray: [],
                 successUpdate: false,
                 errorForm: "",
+                cart: [],
+                numberOfItem: 0,
                 showErrorForm: false,
                 miniVariant: false,
                 right: true,
                 title: 'ImprimShirt'
             },
             methods: {
-                checkEmptyCart : function () {
-                    if(vm.item.length === 0){
+                /**
+                 * Inititalisation du panier avec les item présents en sessions.
+                 * @returns {string}
+                 */
+                checkEmptyCart() {
+                    if (localStorage.getItem('cart') !== null) {
+                        vm.cart = JSON.parse(localStorage.getItem('cart'));
+                        let sumOfProduct = [];
+                        vm.cart.forEach((item) => {
+                            let price;
+                            sumOfProduct.push(parseInt(item.quantity));
+                            item.price = parseInt(item.price);
+                            if (Number.isInteger(item.price)) {
+                                price = item.price + '.00';
+                                item.price = price;
+                            }
+                        })
+                        vm.numberOfItem = _.sum(sumOfProduct);
+
+                    }
+                    else {
                         return vm.cartTitle = "Votre panier est vide :("
                     }
+                },
+
+                /**
+                 * Vide le panier en cours pour l"utilisateur
+                 */
+                destroyCart() {
+                    if (vm.cart === undefined || vm.cart.length === 0) {
+                        return swal('', 'Votre panier est vide', 'error');
+                    }
+                    swal({
+                        title: 'Etes-vous sûr de vouloir vider votre panier?',
+                        text: "Vous perdrez l'ensemble des produits ajoutés",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Confirmer',
+                        cancelButtonText: 'Annuler'
+                    }).then(function () {
+                        vm.cart = [];
+                        vm.numberOfItem = 0;
+                        localStorage.removeItem('cart');
+                        swal(
+                            '',
+                            'Votre panier à été vidé !',
+                            'success'
+                        )
+                    })
+                },
+
+                /**
+                 * Passe à l'étape de validation des informations de l'utilisateur
+                 * @returns {*}
+                 */
+                acceptCart() {
+                    if (vm.cart === undefined || vm.cart.length === 0) {
+                        return swal('', 'Votre panier est vide', 'error');
+                    }
+                    vm.getCurrentUser();
+                    vm.e1 = 2;
+
+                },
+
+                /**
+                 * Récupere les informations de l'utilisateur connecté
+                 * @returns {Promise.<TResult>}
+                 */
+                getCurrentUser() {
+                    return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
+                        this.currentUser = currentUser.data;
+                        console.log(this.currentUser);
+                    });
+                },
+
+                /**
+                 * Check des informations du formulaire
+                 */
+                checkForm() {
+                    this.errorArray = [];
+                    let user = this.currentUser;
+                    if (user.name === "") {
+                        this.errorArray.push("Nom");
+                    }
+                    if (user.email === "") {
+                        this.errorArray.push('Email');
+                    }
+                    if (user.firstname === "") {
+                        this.errorArray.push("Prénom");
+                    }
+                    if (user.country === "") {
+                        this.errorArray.push("Pays");
+                    }
+                    if (user.city === "") {
+                        this.errorArray.push("Ville");
+                    }
+                    if (user.postalCode === "") {
+                        this.errorArray.push('Code postal');
+                    }
+                    if (user.phone === "") {
+                        this.errorArray.push('telephone');
+                    }
+                    if (user.address === "") {
+                        this.errorArray.push("Addresse");
+                    }
+                    if (user.birthdate === "") {
+                        this.errorArray.push("Date de naissance");
+                    }
+                },
+
+                /**
+                 * Passe à l'étape de paiment
+                 * @returns {Promise.<TResult>}
+                 */
+                goToPayment() {
+                    this.checkForm();
+                    if (this.errorArray.length > 0) {
+                        return swal('Erreur', 'Des informations sont manquantes : ' + this.errorArray.toString(), 'error');
+                    }
+                    return this.$http.put(this.baseUrlCurrentUser + isConnected + ".json", this.currentUser).then((resp) => {
+                        vm.e1 = 3;
+                    })
+                },
+
+                /**
+                 * Retourne à l'étape précedente.
+                 * @returns {number}
+                 */
+                cancel() {
+                    if (vm.e1 = 2) {
+                        return vm.e1 = 1;
+                    }
+                    if (vm.e1 = 3) {
+                        return vm.e1 = 2;
+                    }
+                },
+
+                /**
+                 * Callback de retour de systemPay et convertit le panier de l'utilisateur en commande.
+                 */
+                convertCartToOrder() {
+                    if (this.paymentIsValidated !== true) {
+                        return swal('Erreur', 'Le paiement de votre commande à échoué', 'error');
+
+                    }
+                    delete this.currentUser.password;
+                    delete this.currentUser.birthdate;
+                    let order = {
+                        reference: this.guid(),
+                        customerInformation: vm.currentUser,
+                        content: vm.cart,
+                        order_date: new Date(),
+                        state: "En cours de préparation"
+                    }
+                    this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function () {
+                        swal({
+                            title: 'Validation du paiement de votre commande',
+                            text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes",
+                            type: 'success',
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Consulter mon suivis de commande'
+                        }).then(function () {
+                            order = {};
+                            localStorage.removeItem('cart');
+                            this.currentCart = [];
+                            window.location.href = '/orders'
+                        });
+                    })
+                },
+
+                guid() {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                            .toString(16)
+                            .substring(1);
+                    }
+
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                        s4() + '-' + s4() + s4() + s4();
                 }
             }
         });
 
     }
-
     vm.checkEmptyCart();
 </script>
 

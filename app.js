@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var gestionProfil = require('./routes/gestionProfil');
 var product = require('./routes/product');
+let orders = require('./routes/orders');
 var cart = require('./routes/cart');
 
 var app = express();
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/t-shirt', express.static(path.join(__dirname, 't-shirt')));
 
 app.use('/', index);
+app.use('/orders', orders);
 app.use('/users', users);
 app.use('/gestionProfil', gestionProfil);
 app.use('/product', product);

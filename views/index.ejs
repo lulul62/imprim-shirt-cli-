@@ -108,13 +108,18 @@
     <v-btn flat class="yellow--text" @click.native="showEmptyFormNotification = false">Fermer</v-btn>
   </v-snackbar>
   <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
-              :vertical="mode === 'vertical'" v-model="incorrectLogin">
-    L'addresse email ou le mot de passe sont incorrects.
+                            :vertical="mode === 'vertical'" v-model="incorrectLogin">
+    Veuillez vérifier vos identifiants de connexion.
     <v-btn flat class="yellow--text" @click.native="incorrectLogin = false">Fermer</v-btn>
+  </v-snackbar>
+  <v-snackbar :timeout="timeout" :top="y === 'top'" :bottom="y === 'bottom'" :right="x === 'right'" :left="x === 'left'" :multi-line="mode === 'multi-line'"
+              :vertical="mode === 'vertical'" v-model="sameEmailNotification">
+    Un compte est déja enregistré avec cette adresse email.
+    <v-btn flat class="yellow--text" @click.native="sameEmailNotification = false">Fermer</v-btn>
   </v-snackbar>
 </div>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 <script src="/javascripts/login.js"></script>
 <script src="/javascripts/index.js"></script>
