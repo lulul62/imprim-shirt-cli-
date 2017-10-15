@@ -7,14 +7,15 @@ let vm = new Vue({
             selectedItem: {},
             userProduct: {
                 color: "",
-                name: "",
                 price: "",
-                visual: "",
-                design: "",
+                visual: {
+                    shape: "",
+                    design: "",
+                    fullsizeimage: ""
+                },
                 text: "",
                 size: "",
                 gender: "",
-                style: "",
                 quantity: "1"
             },
             selectedItemKey: "",
@@ -23,7 +24,7 @@ let vm = new Vue({
             visualIndex: 0,
             indexOfImg: 0,
             baseUrlFilterProduct: "https://transfertprod-668c2.firebaseio.com/produitList",
-            size: ["XS", "S", "M", "L", "XL", "XXL"],
+            tailles: [],
             gamme: [],
             style: [],
             color: [],
@@ -41,6 +42,10 @@ let vm = new Vue({
                     vm.productList.push(product.body[key]);
                 });
                 vm.selectedItem = vm.productList[0];
+                if (Number.isInteger(parseInt(this.selectedItem.prix))) {
+                    this.selectedItem.prix = this.selectedItem.prix + '.00';
+                    console.log(this.selectedItem);
+                }
                 vm.instanciateObject();
                 return vm.isLoaded = true;
             });
@@ -51,11 +56,9 @@ let vm = new Vue({
          */
         instanciateObject: function () {
             vm.selectedItemKey = vm.selectedItem.key;
-            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].base64;
+            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
             vm.productColor = vm.selectedItem.couleur[0];
-            vm.userProduct.name = vm.selectedItem.nom;
             vm.userProduct.color = vm.selectedItem.couleur[0];
-
         },
 
         /**
@@ -81,7 +84,7 @@ let vm = new Vue({
                 });
                 vm.userProduct.color = vm.selectedItem.couleur[0];
                 vm.selectedItemKey = vm.selectedItem.key;
-                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].base64;
+                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
                 vm.visualIndex = 0;
                 vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
                 vm.productColor = vm.selectedItem.couleur[0];
@@ -101,6 +104,12 @@ let vm = new Vue({
             })
         },
 
+        saveVisual() {
+            var canvas = document.getElementById("tcanvas");
+            var img = canvas.toDataURL("image/png");
+            return img;
+        },
+
         /**
          * Ajuste la vue de l'utilisateur sur le visuel suivant
          */
@@ -113,7 +122,7 @@ let vm = new Vue({
             }
 
             $(this).attr('data-original-title', 'Show Front View');
-            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].base64);
+            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex]);
             a = JSON.stringify(canvas);
             canvas.clear();
             try {
@@ -129,7 +138,7 @@ let vm = new Vue({
          * Permet l'ajout d'un visuel personnalisé
          */
         addPersonnalVisual: function () {
-            vm.userProduct.design = $("#blah")[0].src;
+            vm.userProduct.visual.fullsizeimage = $("#blah")[0].src;
             var offset = 50;
             var left = fabric.util.getRandomInt(0 + offset, 200 - offset);
             var top = fabric.util.getRandomInt(0 + offset, 400 - offset);
@@ -138,7 +147,7 @@ let vm = new Vue({
             var opacity = (function (min, max) {
                 return Math.random() * (max - min) + min;
             })(0.5, 1);
-            fabric.Image.fromURL(vm.userProduct.design, function (image) {
+            fabric.Image.fromURL(vm.userProduct.visual.fullsizeimage, function (image) {
                 image.set({
                     left: left,
                     top: top,
@@ -150,18 +159,66 @@ let vm = new Vue({
                     cornersize: 10,
                     hasRotatingPoint: true
                 });
+                console.log(image);
                 canvas.add(image);
             });
         },
 
-        addProductToCart : function ($event) {
-            console.log();
-            vm.userProduct.price = $("#price").text();
-            vm.userProduct.style = $("#style")[0].value;
-            vm.userProduct.size = $("#size")[0].value;
-            console.log(vm.userProduct);
-        }
 
+        checkBeforeAddToCart: function () {
+            vm.errorCart = [];
+            if (vm.userProduct.size === "") {
+                vm.errorCart.push(' Taille')
+            }
+        },
+
+        /**
+         * Ajoute un produit au panier.
+         * @param $event
+         * @returns {*}
+         */
+        addProductToCart: function ($event) {
+            vm.userProduct.price = $("#price").text();
+            vm.userProduct.size = $("#size")[0].value;
+            vm.userProduct.gamme = vm.selectedItem.gamme;
+            vm.userProduct.visual.shape = $("#tshirtFacing").attr('src');
+            vm.userProduct.gender = vm.selectedItem.genre;
+            this.userProduct.visual.design = this.saveVisual();
+            this.checkBeforeAddToCart();
+            if (vm.errorCart.length > 0) {
+                return swal('Oups :-(', 'Les informations suivantes sont manquantes : ' + vm.errorCart.toString(), 'error');
+            }
+            else {
+                vm.currentCart = [];
+                if (localStorage.getItem('cart') !== null) {
+                    vm.currentCart = localStorage.getItem('cart');
+                    vm.currentCart = JSON.parse(vm.currentCart);
+                }
+                vm.currentCart.push(vm.userProduct);
+                console.log(vm.currentCart);
+                localStorage.setItem('cart', JSON.stringify(vm.currentCart));
+                swal({
+                    title: '',
+                    text: "Votre produit à été ajouté au panier",
+                    type: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Voir mon panier',
+                    cancelButtonText: 'Continuer mes achats',
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-info',
+                    buttonsStyling: false
+                }).then(function () {
+
+                    return window.top.location.href = "/cart";
+                }, function (dismiss) {
+                    if (dismiss === 'cancel') {
+                        return window.top.location.href = "/product";
+                    }
+                })
+            }
+        }
     }
 });
 

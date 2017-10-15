@@ -1,4 +1,3 @@
-
 let vm = new Vue({
     el: '#login',
     data: {
@@ -25,6 +24,8 @@ let vm = new Vue({
         errorArrayString: "",
         errorArray: [],
         timeout: 4000,
+        sameEmail: false,
+        sameEmailNotification: false,
         showEmptyFormNotification: false,
         showSamePasswordNotification: false,
         showSuccessCreateAccountNotification: false,
@@ -34,6 +35,7 @@ let vm = new Vue({
          * Crée un nouvel utilisateur
          */
         createNewUser: function () {
+            let url = encodeURI(vm.baseUrlNewUser + "?orderBy=" + '"email"' + "&equalTo=" + JSON.stringify(vm.newUser.email) + '&print="pretty"');
             let isConnect = false;
             vm.checkForm(isConnect);
             if (vm.errorArray.length > 0) {
@@ -44,25 +46,31 @@ let vm = new Vue({
             if (vm.samePassword === false) {
                 return vm.showSamePasswordNotification = true;
             }
-            else {
-                return this.$http.post(vm.baseUrlNewUser, vm.newUser).then(newUser => {
-                    vm.newUser.userkey = newUser.body.name;
-                    return this.$http.put(vm.baseUrlEditUser + vm.newUser.userkey + ".json", vm.newUser).then(resp => {
-                        vm.showSuccessCreateAccountNotification = true;
-                        vm.samePassword = false;
-                        sessionStorage.setItem("dataKey", vm.newUser.userkey);
-                        vm.newUser = {};
-                        return setTimeout(() => {
-                            window.location.href = "gestionProfil.html"
-                        }, 4000)
-                    })
-                })
-            }
+           this.$http.get(url).then(resp => {
+               "use strict";
+               if(resp.body.length !== 0 || resp.body === null || resp.body === undefined) {
+                   return vm.sameEmailNotification = true;
+               }
+               else {
+                   return this.$http.post(vm.baseUrlNewUser, vm.newUser).then(newUser => {
+                       vm.newUser.userkey = newUser.body.name;
+                       return this.$http.put(vm.baseUrlEditUser + vm.newUser.userkey + ".json", vm.newUser).then(resp => {
+                           vm.showSuccessCreateAccountNotification = true;
+                           vm.samePassword = false;
+                           sessionStorage.setItem("dataKey", vm.newUser.userkey);
+                           vm.newUser = {};
+                           return setTimeout(() => {
+                               window.location.href = "/gestionProfil"
+                           }, 4000)
+                       })
+                   })
+               }
+           });
         },
         /**
          * Compare le mot de passe avec le mot de passe courant
          */
-        comparePassword: function () {
+        comparePassword() {
             if (vm.newUser.password === vm.passwordComparator) {
                 return vm.samePassword = true;
             }
@@ -70,7 +78,7 @@ let vm = new Vue({
         /**
          * Check des informations du formulaire
          */
-        checkForm: function (isConnect) {
+        checkForm(isConnect) {
             vm.errorArray = [];
             if (isConnect === false) {
                 if (vm.newUser.email === "") {
@@ -98,7 +106,7 @@ let vm = new Vue({
         /**
          * Connecte un utilisateur à l'application
          */
-        connectUser: function () {
+        connectUser() {
             vm.userPassword = [];
             let isConnect = true;
             vm.checkForm(isConnect);
@@ -114,7 +122,6 @@ let vm = new Vue({
                     vm.userKey.push(user.body[key].userkey);
                 });
                 if (vm.userPassword[0] === vm.userToConnect.password) {
-                    console.log("c'est les meme");
                     sessionStorage.setItem("dataKey", vm.userKey[0]);
                     return window.location.href = "/gestionProfil";
                 }

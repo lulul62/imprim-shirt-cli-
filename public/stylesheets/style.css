@@ -22,9 +22,7 @@
 }
 
 .application--light {
-  background: #757F9A;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #D7DDE8, #757F9A);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #D7DDE8, #757F9A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: url('http://www.digiphotohub.com/wp-content/uploads/2015/09/bigstock-Abstract-Blurred-Background-Of-92820527.jpg');
 }
 
 h2 {
@@ -366,9 +364,7 @@ background text
 }
 
 #app {
-  background: #757F9A;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #D7DDE8, #757F9A);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #D7DDE8, #757F9A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: url('http://www.digiphotohub.com/wp-content/uploads/2015/09/bigstock-Abstract-Blurred-Background-Of-92820527.jpg');
 }/** CSS Styles */
 
 main {
@@ -410,5 +406,10 @@ main {
   color: black;
   position: relative;
   text-align: left;
+}
+
+.navigation-drawer>.list:not(.list--dense) .list__tile {
+  font-size: 14px;
+  color: #3d3d3d;
 }
 

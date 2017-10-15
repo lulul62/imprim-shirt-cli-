@@ -51,6 +51,10 @@
             cursor: default;
         }
 
+        .swal2-cancel .btn .btn-info {
+            margin: 10px;
+        }
+
         .rotate {
             -webkit-transform: rotate(90deg);
             -moz-transform: rotate(90deg);
@@ -231,10 +235,7 @@
                                 </div>
                                 <div class="well">
                                     <h5>Genre :</h5>
-                                    <select class="mdb-select" v-model="userProduct.gender">
-
-                                        <option value="homme" selected="selected">Homme</option>
-                                        <option value="femme">Femme</option>
+                                    {{selectedItem.genre}}
                                     </select>
                                     <!--						      </p>-->
                                 </div>
@@ -265,14 +266,15 @@
 
                                     <div id="avatarlist">
                                         <h5>Importer un visuel</h5>
+
+                                        <img style="display: none" v-show='userProduct.visual.fullsizeimage !== ""' id="blah"
+                                             src="#"/>
+                                        <input type="button" v-on:click="addPersonnalVisual" value="Valider"
+                                               class="btn btn-primary">
                                         <label class="btn btn-default btn-file">
                                             Parcourir... <input type='file' style="display: none"
                                                                 onchange="readURL(this);"/>
                                         </label>
-                                        <img style="display: none" v-show='userProduct.design !== ""' id="blah"
-                                             src="#"/>
-                                        <input type="button" v-on:click="addPersonnalVisual" value="Valider"
-                                               class="btn btn-primary">
                                     </div>
                                 </div>
                             </div>
@@ -351,7 +353,7 @@
                         </div>
                     </div>
                     <!--	EDITOR      -->
-                    <div class="well">
+                    <div id="visual" class="well">
                         <div id="shirtDiv" class="page"
                              style="position: relative; background-color: rgb(255, 255, 255);">
                             <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
@@ -399,7 +401,7 @@
                 </div>
 
             </div>
-
+<canvas id="visuel"></canvas>
         </section>
     </div><!-- /container -->
 
@@ -407,15 +409,18 @@
 
 <script src='https://unpkg.com/vue/dist/vue.js'></script>
 <script src="https://cdn.jsdelivr.net/vue.resource/1.2.0/vue-resource.min.js"></script>
+<script src="https://unpkg.com/merge-images"></script>
 <script type="text/javascript" src="js/vueIndex.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
+
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

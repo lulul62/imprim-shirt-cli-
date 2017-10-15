@@ -10,6 +10,8 @@
           type="text/css">
     <link href="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.css" rel="stylesheet" type="text/css">
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.css">
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
 </head>
 
@@ -20,7 +22,7 @@
             <v-list>
                 <v-list-tile v-for="(item, i) in items" :key="i" v-bind:href="item.link" value="true">
                     <v-list-tile-action>
-                        <v-icon light v-html="item.icon"></v-icon>
+                        <v-icon secondary v-html="item.icon"></v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
                         <v-list-tile-title v-text="item.title"></v-list-tile-title>
@@ -30,7 +32,9 @@
         </v-navigation-drawer>
         <v-toolbar>
             <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-
+            <v-toolbar-title>Gestion du profil</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>Imprim-shirt</v-toolbar-title>
         </v-toolbar>
         <main>
             <v-container fluid style="    position: relative;
@@ -38,15 +42,27 @@
                 <v-container fluid>
                     <v-slide-y-transition mode="out-in">
                         <v-layout column align-center>
-                            <template>
-                                <v-card class="grey lighten-4 elevation-1">
+                            <template >
+                                <v-card  class="grey lighten-4 elevation-1">
 
                                     <v-card-text>
                                         <v-container fluid>
                                             <v-layout row>
                                                 <v-flex xs4>
-                                                    <v-subheader>Nom de l'utilisateur</v-subheader>
+                                                    <v-subheader>Adresse email</v-subheader>
                                                 </v-flex>
+
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.email"
+                                                                  label="Entrez votre adresse email"
+                                                                  id="email"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Nom</v-subheader>
+                                                </v-flex>
+
                                                 <v-flex xs8>
                                                     <v-text-field name="input-1" v-model="currentUser.name"
                                                                   label="Entrez votre nom" id="name"></v-text-field>
@@ -54,7 +70,7 @@
                                             </v-layout>
                                             <v-layout row>
                                                 <v-flex xs4>
-                                                    <v-subheader>Prénom de l'utilisateur</v-subheader>
+                                                    <v-subheader>Prénom</v-subheader>
                                                 </v-flex>
                                                 <v-flex xs8>
                                                     <v-text-field name="input-1" v-model="currentUser.firstname"
@@ -72,6 +88,16 @@
                                             </v-layout>
                                             <v-layout row>
                                                 <v-flex xs4>
+                                                    <v-subheader>Code postal</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.postalCode"
+                                                                  label="Entrez votre code postal"
+                                                                  id="postalCode"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
                                                     <v-subheader>Ville</v-subheader>
                                                 </v-flex>
                                                 <v-flex xs8>
@@ -81,12 +107,22 @@
                                             </v-layout>
                                             <v-layout row>
                                                 <v-flex xs4>
-                                                    <v-subheader>Addresse</v-subheader>
+                                                    <v-subheader>Adresse</v-subheader>
                                                 </v-flex>
                                                 <v-flex xs8>
                                                     <v-text-field name="input-1" v-model="currentUser.address"
-                                                                  label="Entrez votre addresse"
+                                                                  label="Entrez votre adresse"
                                                                   id="name"></v-text-field>
+                                                </v-flex>
+                                            </v-layout>
+                                            <v-layout row>
+                                                <v-flex xs4>
+                                                    <v-subheader>Téléphone</v-subheader>
+                                                </v-flex>
+                                                <v-flex xs8>
+                                                    <v-text-field name="input-1" v-model="currentUser.telephone"
+                                                                  label="Entrez votre numéro de téléphone"
+                                                                  id="tel"></v-text-field>
                                                 </v-flex>
                                             </v-layout>
                                             <v-layout row>
@@ -134,8 +170,10 @@
 
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://unpkg.com/vuetify@0.15.7/dist/vuetify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.4/vue-resource.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>
 <script>
     var isConnected = sessionStorage.getItem("dataKey");
     console.log(isConnected);
@@ -158,9 +196,9 @@
                 baseUrlCurrentUser: "https://transfertprod-668c2.firebaseio.com/user/",
                 items: [
                     {icon: "note_add", title: "Personnaliser un produit", link: "/product"},
-                    {icon: "shopping_cart", title: "Panier", link : "/cart"},
+                    {icon: "shopping_cart", title: "Panier", link: "/cart"},
                     {icon: 'account_circle', title: 'Gestion du profil', link: "/gestionProfil"},
-                    {icon: 'shopping_basket', title: 'Suivi des commandes'}
+                    {icon: 'shopping_basket', title: 'Suivi des commandes', link: '/orders'}
                 ],
                 currentUser: {},
                 y: 'bottom',
@@ -175,6 +213,11 @@
                 right: true,
                 title: 'ImprimShirt'
             },
+            created() {
+                return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
+                    this.currentUser = currentUser.data;
+                });
+            },
             methods: {
                 checkForm: function () {
                     this.errorArray = [];
@@ -182,14 +225,23 @@
                     if (user.name === "") {
                         this.errorArray.push("Nom");
                     }
+                    if (user.email === "") {
+                        this.errorArray.push('Email');
+                    }
                     if (user.firstname === "") {
                         this.errorArray.push("Prénom");
                     }
                     if (user.country === "") {
                         this.errorArray.push("Pays");
                     }
+                    if(user.postalCode === "") {
+                        this.errorArray.push("Code postal");
+                    }
                     if (user.city === "") {
                         this.errorArray.push("Ville");
+                    }
+                    if (user.phone === "") {
+                        this.errorArray.push('telephone');
                     }
                     if (user.address === "") {
                         this.errorArray.push("Addresse");
@@ -205,22 +257,12 @@
                         return this.showErrorForm = true;
                     }
                     return this.$http.put(this.baseUrlCurrentUser + isConnected + ".json", this.currentUser).then((resp) => {
-                        this.getCurrentUser();
-                        return this.successUpdate = true;
+                        return swal('', 'Votre profil à été mis à jour', 'success');
                     })
 
-                },
-                getCurrentUser: function () {
-                    return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
-                        this.currentUser = currentUser.data;
-                    });
                 }
-            }
+            },
         });
-
-
-        vm.getCurrentUser();
-
     }
 </script>
 </body>
