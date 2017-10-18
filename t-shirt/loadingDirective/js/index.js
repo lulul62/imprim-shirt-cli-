@@ -27,13 +27,13 @@ function createSVG(tag, properties, opt_children) {
 
 function createPhraseSvg(phrase, yOffset) {
   var text = createSVG("text", {
-    fill: "white",
+    fill: "black",
     x: 50,
     y: yOffset,
     "font-size": 18,
     "font-family": "Arial"
   });
-  text.appendChild(document.createTextNode(phrase + "..."));
+  text.appendChild(document.createTextNode(phrase));
   return text;
 }
 function createCheckSvg(yOffset, index) {
