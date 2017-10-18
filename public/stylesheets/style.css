@@ -25,6 +25,11 @@
   background: url('https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/d-Wgo33/unrecognisable-group-of-people-walking-bright-colours-blurry-anonymous-crowd-bokeh-background-new-york-city-slow-motion_eolxywqqhl_thumbnail-full01.png');
 }
 
+body{
+  opacity: 1;
+  transition: 1s opacity;
+}
+
 h2 {
   font-size: 15px !important;
   /* line-height: 1.35; */

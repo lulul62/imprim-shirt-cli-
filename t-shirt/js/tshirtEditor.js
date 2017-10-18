@@ -275,8 +275,7 @@ var line4;
 	   $('#flip').click(
 		   function() {			   
 			   	if ($(this).attr("data-original-title") == "Show Back View") {
-			   		$(this).attr('data-original-title', 'Show Front View');			        		       
-			        $("#tshirtFacing").attr("src","img/crew_back.png");			        
+			   		$(this).attr('data-original-title', 'Show Front View');
 			        a = JSON.stringify(canvas);
 			        canvas.clear();
 			        try
@@ -288,8 +287,7 @@ var line4;
 			        {}
 			        
 			    } else {
-			    	$(this).attr('data-original-title', 'Show Back View');			    				    	
-			    	$("#tshirtFacing").attr("src","img/crew_front.png");			    	
+			    	$(this).attr('data-original-title', 'Show Back View');
 			    	b = JSON.stringify(canvas);
 			    	canvas.clear();
 			    	try

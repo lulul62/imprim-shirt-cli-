@@ -341,11 +341,11 @@
                                                                                   value="#000000"></a>
                                 <!--- Background <input type="hidden" id="text-bgcolor" class="color-picker" size="7" value="#ffffff"> --->
                             </div>
-                            <div class="pull-right" align="" id="imageeditor" style="display:none;">
+                            <div class="pull-right" align="" id="imageeditor">
                                 <div style="z-index: 9999999999999999" class="btn-group">
-                                    <button class="btn" id="bring-to-front" title="Envoyer le visuel à l'avant"><i
+                                    <button style="display: none" class="btn" id="bring-to-front" title="Envoyer le visuel à l'avant"><i
                                             class="icon-fast-backward rotate" style="height:19px;"></i></button>
-                                    <button class="btn" id="send-to-back" title="Envoyer le visuel à l'arrière"><i
+                                    <button style="display: none" class="btn" id="send-to-back" title="Envoyer le visuel à l'arrière"><i
                                             class="icon-fast-forward rotate" style="height:19px;"></i></button>
                                     <button v-on:click="showOtherSideOfProduct" type="button" class="btn"
                                             title="Changer de face"><i class="icon-retweet" style="height:19px;"></i>

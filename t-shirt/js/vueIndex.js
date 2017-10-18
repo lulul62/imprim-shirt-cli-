@@ -55,10 +55,19 @@ let vm = new Vue({
          * Instancie le premier produit sur l'IHM
          */
         instanciateObject: function () {
+            let computedVisual = [];
+            vm.selectedItem.visuel.forEach(visual => {
+               computedVisual.push({
+                   img : visual,
+                   canvas : ""
+               })
+            })
+            this.selectedItem.visuel = computedVisual;
             vm.selectedItemKey = vm.selectedItem.key;
-            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
+            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
             vm.productColor = vm.selectedItem.couleur[0];
             vm.userProduct.color = vm.selectedItem.couleur[0];
+            console.log(vm.selectedItem);
         },
 
         /**
@@ -114,24 +123,27 @@ let vm = new Vue({
          * Ajuste la vue de l'utilisateur sur le visuel suivant
          */
         showOtherSideOfProduct: function () {
+            vm.selectedItem.visuel[vm.visualIndex].canvas = JSON.stringify(canvas);
+            vm.selectedItem.visuel[vm.visualIndex].computedCanvas = this.saveVisual();
+            canvas.clear();
             if (vm.visualIndex > vm.indexOfImg) {
                 vm.visualIndex = 0;
             }
             else {
                 vm.visualIndex = vm.visualIndex + 1;
             }
-
-            $(this).attr('data-original-title', 'Show Front View');
-            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex]);
-            a = JSON.stringify(canvas);
-            canvas.clear();
+            $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].img);
+            console.log(vm.selectedItem);
             try {
-                var json = JSON.parse(b);
-                canvas.loadFromJSON(b);
+                var json = JSON.parse(vm.selectedItem.visuel[vm.visualIndex].canvas);
+                canvas.loadFromJSON(vm.selectedItem.visuel[vm.visualIndex].canvas);
             }
             catch (e) {
             }
-
+            canvas.renderAll();
+            setTimeout(function() {
+                canvas.calcOffset();
+            },200);
         },
 
         /**
@@ -181,9 +193,10 @@ let vm = new Vue({
             vm.userProduct.price = $("#price").text();
             vm.userProduct.size = $("#size")[0].value;
             vm.userProduct.gamme = vm.selectedItem.gamme;
-            vm.userProduct.visual.shape = $("#tshirtFacing").attr('src');
+            vm.userProduct.visual = vm.selectedItem.visuel;
+            vm.userProduct.visual[vm.visualIndex].computedCanvas = this.saveVisual();
             vm.userProduct.gender = vm.selectedItem.genre;
-            this.userProduct.visual.design = this.saveVisual();
+            console.log(vm.userProduct);
             this.checkBeforeAddToCart();
             if (vm.errorCart.length > 0) {
                 return swal('Oups :-(', 'Les informations suivantes sont manquantes : ' + vm.errorCart.toString(), 'error');
