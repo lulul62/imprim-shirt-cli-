@@ -57,13 +57,14 @@ let vm = new Vue({
         instanciateObject: function () {
             let computedVisual = [];
             vm.selectedItem.visuel.forEach(visual => {
-               computedVisual.push({
-                   img : visual,
-                   canvas : ""
-               })
+                computedVisual.push({
+                    img: visual,
+                    canvas: ""
+                })
             })
             this.selectedItem.visuel = computedVisual;
             vm.selectedItemKey = vm.selectedItem.key;
+            vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
             vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
             vm.productColor = vm.selectedItem.couleur[0];
             vm.userProduct.color = vm.selectedItem.couleur[0];
@@ -91,12 +92,20 @@ let vm = new Vue({
                 Object.keys(product.body).forEach(function (key) {
                     vm.selectedItem = product.body[key];
                 });
+                let computedVisual = [];
+                vm.selectedItem.visuel.forEach(visual => {
+                    computedVisual.push({
+                        img: visual,
+                        canvas: ""
+                    })
+                })
                 vm.userProduct.color = vm.selectedItem.couleur[0];
                 vm.selectedItemKey = vm.selectedItem.key;
                 vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
                 vm.visualIndex = 0;
                 vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
                 vm.productColor = vm.selectedItem.couleur[0];
+                this.selectedItem.visuel = computedVisual;
                 vm.userProduct.name = vm.selectedItem.nom;
                 return vm.isLoaded = true;
 
@@ -108,9 +117,11 @@ let vm = new Vue({
          * @param product
          */
         getNumberOfVisualInProduct: function (product) {
+            vm.indexOfImg = 0;
             product.forEach((img, index) => {
-                vm.indexOfImg = vm.indexOfImg + index;
+                vm.indexOfImg++
             })
+            vm.indexOfImg = vm.indexOfImg - 1;
         },
 
         saveVisual() {
@@ -126,12 +137,12 @@ let vm = new Vue({
             vm.selectedItem.visuel[vm.visualIndex].canvas = JSON.stringify(canvas);
             vm.selectedItem.visuel[vm.visualIndex].computedCanvas = this.saveVisual();
             canvas.clear();
+            vm.visualIndex++;
+            console.log(vm.indexOfImg, vm.visualIndex)
             if (vm.visualIndex > vm.indexOfImg) {
                 vm.visualIndex = 0;
             }
-            else {
-                vm.visualIndex = vm.visualIndex + 1;
-            }
+            console.log(vm.visualIndex)
             $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].img);
             console.log(vm.selectedItem);
             try {
@@ -141,9 +152,9 @@ let vm = new Vue({
             catch (e) {
             }
             canvas.renderAll();
-            setTimeout(function() {
+            setTimeout(function () {
                 canvas.calcOffset();
-            },200);
+            }, 200);
         },
 
         /**

@@ -454,20 +454,24 @@
                         order_date: new Date(),
                         state: "En cours de préparation"
                     }
-                    this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function () {
-                        swal({
-                            title: 'Validation du paiement de votre commande',
-                            text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes",
-                            type: 'success',
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Consulter mon suivis de commande'
-                        }).then(function () {
-                            order = {};
-                            localStorage.removeItem('cart');
-                            this.currentCart = [];
-                            window.location.href = '/orders'
-                        });
+                    this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function (resp) {
+                        order.key = resp.body.name;
+                        this.$http.put('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key +  '.json', order).then(res => {
+                            swal({
+                                title: 'Validation du paiement de votre commande',
+                                text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes",
+                                type: 'success',
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Consulter mon suivis de commande'
+                            }).then(function () {
+                                order = {};
+                                localStorage.removeItem('cart');
+                                this.currentCart = [];
+                                window.location.href = '/orders'
+                            });
+                        })
+
                     })
                 },
 
