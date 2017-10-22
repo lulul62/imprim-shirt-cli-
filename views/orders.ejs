@@ -44,9 +44,7 @@
             <main>
                 <v-container fluid style="    position: relative;
     top: 2em;">
-                    <v-container fluid>
                         <v-slide-y-transition mode="out-in">
-                            <v-layout column align-center>
                                 <div v-if="dataLoaded === false">
                                     <div class="sk-circle">
                                         <div class="sk-circle1 sk-child"></div>
@@ -149,7 +147,7 @@
 
                                                                                                 <template>
                                                                                                     <v-carousel :cycle="false" light hide-controls>
-                                                                                                        <v-carousel-item v-for="visual in content.visual" style="width: 325px" v-bind:style='{"background-color" : content.color}' v-bind:src="visual.img"><img id="canvas" style="border: none;    position: relative;
+                                                                                                        <v-carousel-item v-for="visual in content.visual" v-bind:style='{"background-color" : content.color}' v-bind:src="visual.img"><img id="canvas" style="border: none;    position: relative;
     bottom: 20px;" v-bind:src="visual.computedCanvas" style="width : 135px; height:250px"></v-carousel-item>
                                                                                                     </v-carousel>
                                                                                                 </template>
@@ -182,11 +180,8 @@
                                     </v-card>
 
                                 </template>
-                            </v-layout>
-
                         </v-slide-y-transition>
 
-                    </v-container>
                 </v-container>
 
             </main>
