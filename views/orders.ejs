@@ -129,7 +129,8 @@
 
                                                                                                 <template>
                                                                                                     <v-carousel :cycle="false" light hide-controls>
-                                                                                                        <v-carousel-item v-for="visual in content.visual" style="width: 325px" v-bind:style='{"background-color" : content.color}' v-bind:src="visual.img"><img id="canvas" style="border: none;" v-bind:src="visual.computedCanvas" style="width : 135px; height:250px"></v-carousel-item>
+                                                                                                        <v-carousel-item v-for="visual in content.visual" style="width: 325px" v-bind:style='{"background-color" : content.color}' v-bind:src="visual.img"><img id="canvas" style="border: none;    position: relative;
+    bottom: 20px;" v-bind:src="visual.computedCanvas" style="width : 135px; height:250px"></v-carousel-item>
                                                                                                     </v-carousel>
                                                                                                 </template>
 
