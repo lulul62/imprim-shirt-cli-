@@ -72,6 +72,7 @@ var line4;
             canvas.item(canvas.item.length-1).hasRotatingPoint = true;    
             $("#texteditor").css('display', 'block');
             $("#imageeditor").css('display', 'block');
+            canvas.calcOffset();
 	  	};
 	  	$("#text-string").keyup(function(){	  		
 	  		var activeObject = canvas.getActiveObject();

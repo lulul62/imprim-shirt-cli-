@@ -247,10 +247,13 @@
                                     <!--						      </p>-->
                                 </div>
                                 <div class="well">
-                                    <h5>Genre :</h5>
-                                    {{selectedItem.genre}}
-                                    </select>
-                                    <!--						      </p>-->
+                                    <h5>Couleurs disponibles :</h5>
+                                    <ul class="nav">
+                                        <button class="color-preview" v-for="color in selectedItem.couleur"
+                                                v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
+                                                title="color" v-bind:style='{"background-color": color}'></button>
+
+                                    </ul>
                                 </div>
                                 <div class="well">
                                     <!--					      	<h3>Tee Styles</h3>-->
@@ -401,15 +404,11 @@
                                 name="addToTheBag" id="addToTheBag">Ajouter
                             au panier <i class="icon-briefcase icon-white"></i></button>
                     </div>
-
                     <div class="well">
-                        <h5>Couleurs disponibles :</h5>
-                        <ul class="nav">
-                            <button class="color-preview" v-for="color in selectedItem.couleur"
-                                    v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
-                                    title="color" v-bind:style='{"background-color": color}'></button>
-
-                        </ul>
+                        <h5>Genre :</h5>
+                        {{selectedItem.genre}}
+                        </select>
+                        <!--						      </p>-->
                     </div>
                 </div>
 

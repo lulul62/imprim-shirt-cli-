@@ -281,11 +281,7 @@
                         vm.cart.forEach((item) => {
                             let price;
                             sumOfProduct.push(parseInt(item.quantity));
-                            item.price = parseInt(item.price);
-                            if (Number.isInteger(item.price)) {
-                                price = item.price + '.00';
-                                item.price = price;
-                            }
+                            item.price = parseFloat(item.price).toFixed(2);
                         })
 
                         vm.numberOfItem = _.sum(sumOfProduct);

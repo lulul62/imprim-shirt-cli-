@@ -42,10 +42,6 @@ let vm = new Vue({
                     vm.productList.push(product.body[key]);
                 });
                 vm.selectedItem = vm.productList[0];
-                if (Number.isInteger(parseInt(this.selectedItem.prix))) {
-                    this.selectedItem.prix = this.selectedItem.prix + '.00';
-                    console.log(this.selectedItem);
-                }
                 vm.instanciateObject();
                 return vm.isLoaded = true;
             });
@@ -67,6 +63,7 @@ let vm = new Vue({
             vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
             vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
             vm.productColor = vm.selectedItem.couleur[0];
+            this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
             vm.userProduct.color = vm.selectedItem.couleur[0];
             console.log(vm.selectedItem);
         },
@@ -105,6 +102,7 @@ let vm = new Vue({
                 vm.visualIndex = 0;
                 vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
                 vm.productColor = vm.selectedItem.couleur[0];
+                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
                 this.selectedItem.visuel = computedVisual;
                 vm.userProduct.name = vm.selectedItem.nom;
                 return vm.isLoaded = true;
