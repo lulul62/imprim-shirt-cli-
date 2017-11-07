@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var gestionProfil = require('./routes/gestionProfil');
 var product = require('./routes/product');
 let orders = require('./routes/orders');
+let mail = require('./routes/mail');
 var cart = require('./routes/cart');
 
 var app = express();
@@ -17,6 +18,12 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -30,6 +37,7 @@ app.use('/t-shirt', express.static(path.join(__dirname, 't-shirt')));
 app.use('/', index);
 app.use('/orders', orders);
 app.use('/users', users);
+app.use('/mail', mail);
 app.use('/gestionProfil', gestionProfil);
 app.use('/product', product);
 app.use('/cart', cart);

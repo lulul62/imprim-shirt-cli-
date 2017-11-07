@@ -87,8 +87,12 @@
                                                             </v-list-tile>
                                                             <template>
                                                                 <v-carousel :cycle="false" light hide-controls>
-                                                                    <v-carousel-item v-for="visual in item.visual" style="width: 325px" v-bind:style='{"background-color" : item.color}' v-bind:src="visual.img"><img id="canvas" style="border: none;     position: relative;
-    bottom: 20px;" v-bind:src="visual.computedCanvas" style="width : 135px; height:250px"></v-carousel-item>
+                                                                    <v-carousel-item v-for="visual in item.visual" style="width: 325px" v-bind:style='{"background-color" : item.color}' v-bind:src="visual.img"><img id="canvas" style="{
+    border: none;
+    position: relative;
+    bottom: 80px;
+    left: 5px;
+}" v-bind:src="visual.computedCanvas" style="width : 135px; height:250px"></v-carousel-item>
                                                                 </v-carousel>
                                                             </template>
 
@@ -332,6 +336,7 @@
                     }
                     vm.getCurrentUser();
                     vm.e1 = 2;
+                    console.log(this.cart)
 
                 },
 
@@ -454,21 +459,27 @@
                     this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function (resp) {
                         order.key = resp.body.name;
                         this.$http.put('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key +  '.json', order).then(res => {
-                            swal({
-                                title: 'Validation du paiement de votre commande',
-                                text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes",
-                                type: 'success',
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Consulter mon suivis de commande'
-                            }).then(function () {
-                                order = {};
-                                localStorage.removeItem('cart');
-                                this.currentCart = [];
-                                window.location.href = '/orders'
-                            });
-                        })
-
+                            let email = {
+                                orderRef : order.reference,
+                                clientEmail: order.customerInformation.email,
+                                type: 'order'
+                            }
+                            this.$http.post('http://localhost:3000/mail', email).then(success => {
+                                swal({
+                                    title: 'Validation du paiement de votre commande',
+                                    text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes, un email de confirmation vous à été envoyé sur votre adresse email.",
+                                    type: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Consulter mon suivis de commande'
+                                }).then(function () {
+                                    order = {};
+                                    localStorage.removeItem('cart');
+                                    this.currentCart = [];
+                                    window.location.href = '/orders'
+                                });
+                            })
+                            })
                     })
                 },
 

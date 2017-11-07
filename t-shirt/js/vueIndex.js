@@ -3,6 +3,7 @@ let vm = new Vue({
     data() {
         return {
             baseUrlProduct: "https://transfertprod-668c2.firebaseio.com/produitList.json",
+            baseurlcolor: "https://transfertprod-668c2.firebaseio.com/couleurList.json",
             productList: [],
             selectedItem: {},
             userProduct: {
@@ -18,9 +19,11 @@ let vm = new Vue({
                 gender: "",
                 quantity: "1"
             },
+            showAdvertisement: true,
             selectedItemKey: "",
             productColor: "",
             isLoaded: false,
+            colorList : [],
             visualIndex: 0,
             indexOfImg: 0,
             baseUrlFilterProduct: "https://transfertprod-668c2.firebaseio.com/produitList",
@@ -28,7 +31,13 @@ let vm = new Vue({
             gamme: [],
             style: [],
             color: [],
+            couleurToShow : []
         }
+    },
+    mounted() {
+        this.getAllColor();
+        this.getAllProduct();
+
     },
     methods: {
         /**
@@ -36,17 +45,38 @@ let vm = new Vue({
          * @returns {Promise.<TResult>}
          */
         getAllProduct: function () {
-            vm.productList = [];
-            return this.$http.get(vm.baseUrlProduct).then(product => {
+            this.productList = [];
+            return this.$http.get(this.baseUrlProduct).then(product => {
                 Object.keys(product.body).forEach((key) => {
-                    vm.productList.push(product.body[key]);
+                    this.productList.push(product.body[key]);
                 });
-                vm.selectedItem = vm.productList[0];
-                vm.instanciateObject();
-                return vm.isLoaded = true;
+                this.selectedItem = this.productList[0];
+                this.showCurrentColorOfProduct()
+                this.instanciateObject();
+                return this.isLoaded = true;
             });
         },
 
+
+        /**
+         * Get all product color
+         */
+        getAllColor() {
+            this.$http.get(this.baseurlcolor).then(resp => {
+                Object.keys(resp.data).forEach(key => {
+                    this.colorList.push(resp.data[key]);
+                });
+            })
+        },
+        /**
+         * Notify the user that he is responsible for his act
+         */
+        legalMention () {
+         if(this.showAdvertisement) {
+             swal('Informations', 'En important une image, vous confirmez qu\'elle ne va ni à l\'encontre de la loi ni des droits de tiers', 'info')
+         }
+         this.showAdvertisement = false
+        },
         /**
          * Instancie le premier produit sur l'IHM
          */
@@ -58,14 +88,15 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
-            this.selectedItem.visuel = computedVisual;
-            vm.selectedItemKey = vm.selectedItem.key;
-            vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
-            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
-            vm.productColor = vm.selectedItem.couleur[0];
-            this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
-            vm.userProduct.color = vm.selectedItem.couleur[0];
-            console.log(vm.selectedItem);
+            this.showCurrentColorOfProduct()
+                "use strict";
+                this.userProduct.color = this.couleurToShow[0].color;
+                this.productColor = this.couleurToShow[0].color;
+                this.selectedItem.visuel = computedVisual;
+                vm.selectedItemKey = vm.selectedItem.key;
+                vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
+                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
+                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
         },
 
         /**
@@ -96,17 +127,17 @@ let vm = new Vue({
                         canvas: ""
                     })
                 })
-                vm.userProduct.color = vm.selectedItem.couleur[0];
-                vm.selectedItemKey = vm.selectedItem.key;
-                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
-                vm.visualIndex = 0;
-                vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
-                vm.productColor = vm.selectedItem.couleur[0];
-                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
-                this.selectedItem.visuel = computedVisual;
-                vm.userProduct.name = vm.selectedItem.nom;
-                return vm.isLoaded = true;
-
+                this.showCurrentColorOfProduct()
+                    this.userProduct.color = this.couleurToShow[0].color;
+                    this.productColor = this.couleurToShow[0].color;
+                    vm.selectedItemKey = vm.selectedItem.key;
+                    vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
+                    vm.visualIndex = 0;
+                    vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
+                    this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
+                    this.selectedItem.visuel = computedVisual;
+                    vm.userProduct.name = vm.selectedItem.nom;
+                    return vm.isLoaded = true;
             })
         },
 
@@ -159,10 +190,11 @@ let vm = new Vue({
          * Permet l'ajout d'un visuel personnalisé
          */
         addPersonnalVisual: function () {
+            this.legalMention()
             vm.userProduct.visual.fullsizeimage = $("#blah")[0].src;
             var offset = 50;
-            var left = fabric.util.getRandomInt(0 + offset, 200 - offset);
-            var top = fabric.util.getRandomInt(0 + offset, 400 - offset);
+            var left = fabric.util.getRandomInt(0 + offset, 150 - offset);
+            var top = fabric.util.getRandomInt(0 + offset, 150 - offset);
             var angle = fabric.util.getRandomInt(-20, 40);
             var width = fabric.util.getRandomInt(30, 50);
             var opacity = (function (min, max) {
@@ -232,7 +264,6 @@ let vm = new Vue({
                     cancelButtonClass: 'btn btn-info',
                     buttonsStyling: false
                 }).then(function () {
-
                     return window.top.location.href = "/cart";
                 }, function (dismiss) {
                     if (dismiss === 'cancel') {
@@ -240,12 +271,25 @@ let vm = new Vue({
                     }
                 })
             }
+        },
+        /**
+         * Affiche la liste des couleurs du produit selectionné par l'utilisateur
+         */
+       async showCurrentColorOfProduct() {
+           this.couleurToShow = [];
+           await this.selectedItem.couleur.forEach(colorName => {
+                let index = _.findIndex(this.colorList, {'nom': colorName});
+                if(index !== -1) {
+                    this.couleurToShow.push({color: this.colorList[index].value})
+                }
+            });
+            return this.couleurToShow
         }
     }
 });
 
 
-vm.getAllProduct();
+
 
 /**
  * Affiche l'image personnalisé dans le conteneur HTML
@@ -259,10 +303,12 @@ function readURL(input) {
             $('#blah')
                 .attr('src', e.target.result)
                 .width(150)
-                .height(200);
+                .height(150);
         };
 
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+
 

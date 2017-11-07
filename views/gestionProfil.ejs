@@ -240,7 +240,10 @@
                 });
             },
             methods: {
-                checkForm: function () {
+                /**
+                 * Check du formulaire
+                 **/
+                checkForm () {
                     this.errorArray = [];
                     let user = this.currentUser;
                     if (user.name === "") {
@@ -271,13 +274,28 @@
                         this.errorArray.push("Date de naissance");
                     }
                 },
-                updateUserProfil: function () {
+                /**
+                 * Update du profil de l'utilisateur
+                 * @returns {*}
+                 */
+                updateUserProfil () {
                     this.checkForm();
                     if (this.errorArray.length > 0) {
                         this.errorForm = this.errorArray.toString();
                         return this.showErrorForm = true;
                     }
-                    return this.$http.put(this.baseUrlCurrentUser + isConnected + ".json", this.currentUser).then((resp) => {
+                    let usersProfileUpdate = {
+                        name : this.currentUser.name,
+                        email : this.currentUser.email,
+                        firstname : this.currentUser.firstname,
+                        country : this.currentUser.country,
+                        postalCode : this.currentUser.postalCode,
+                        city: this.currentUser.city,
+                        phone : this.currentUser.phone,
+                        address : this.currentUser.address,
+                        birthdate : this.currentUser.birthdate
+                    }
+                    return this.$http.patch(this.baseUrlCurrentUser + isConnected + ".json", usersProfileUpdate).then((resp) => {
                         return swal('', 'Votre profil à été mis à jour', 'success');
                     })
 

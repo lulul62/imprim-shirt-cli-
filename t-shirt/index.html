@@ -249,9 +249,9 @@
                                 <div class="well">
                                     <h5>Couleurs disponibles :</h5>
                                     <ul class="nav">
-                                        <button class="color-preview" v-for="color in selectedItem.couleur"
-                                                v-bind:value="color" v-on:click.stop="setProductColor($event, color)"
-                                                title="color" v-bind:style='{"background-color": color}'></button>
+                                        <button class="color-preview" v-for="value in couleurToShow"
+                                                v-bind:value="value.color" v-on:click.stop="setProductColor($event, value.color)"
+                                                title="value" v-bind:style='{"background-color": value.color}'></button>
 
                                     </ul>
                                 </div>
@@ -375,15 +375,14 @@
                             <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
                                  v-bind:src="selectedItem.firstProductImg">
                             <div id="drawingArea"
-                                 style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;">
-                                <canvas id="tcanvas" width=200 height="400" class="hover"
-                                        style="-webkit-user-select: none;"></canvas>
+                                 style="position: absolute;top: 150px;left: 165px;z-index: 10;width: 150px;height: 150px;">
+                                <canvas id="tcanvas" width=200 height="150" class="hover"
+                                        style="-webkit-user-select: none; border: 1px solid black;"></canvas>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
                 <div class="span3">
                     <div style="position: relative;" class="well">
                         <h5>Quantité :</h5>
@@ -393,7 +392,7 @@
                         <table class="table">
                             <tr>
                                 <td>{{selectedItem.gamme}} x{{userProduct.quantity}}</td>
-                                <td id="price" align="right">{{selectedItem.prix * userProduct.quantity}}€</td>
+                                <td id="price" align="right">{{parseFloat(selectedItem.prix).toFixed(2) * userProduct.quantity}}€</td>
                             </tr>
 
                         </table>
@@ -426,6 +425,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
 
 <script type="text/javascript"
