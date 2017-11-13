@@ -23,7 +23,7 @@ let vm = new Vue({
             selectedItemKey: "",
             productColor: "",
             isLoaded: false,
-            colorList : [],
+            colorList: [],
             visualIndex: 0,
             indexOfImg: 0,
             baseUrlFilterProduct: "https://transfertprod-668c2.firebaseio.com/produitList",
@@ -31,7 +31,7 @@ let vm = new Vue({
             gamme: [],
             style: [],
             color: [],
-            couleurToShow : []
+            couleurToShow: []
         }
     },
     mounted() {
@@ -71,11 +71,11 @@ let vm = new Vue({
         /**
          * Notify the user that he is responsible for his act
          */
-        legalMention () {
-         if(this.showAdvertisement) {
-             swal('Informations', 'En important une image, vous confirmez qu\'elle ne va ni à l\'encontre de la loi ni des droits de tiers', 'info')
-         }
-         this.showAdvertisement = false
+        legalMention() {
+            if (this.showAdvertisement) {
+                swal('Informations', 'En important une image, vous confirmez qu\'elle ne va ni à l\'encontre de la loi ni des droits de tiers', 'info')
+            }
+            this.showAdvertisement = false
         },
         /**
          * Instancie le premier produit sur l'IHM
@@ -88,15 +88,19 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
+            console.log(vm.selectedItem)
             this.showCurrentColorOfProduct()
-                "use strict";
-                this.userProduct.color = this.couleurToShow[0].color;
-                this.productColor = this.couleurToShow[0].color;
-                this.selectedItem.visuel = computedVisual;
-                vm.selectedItemKey = vm.selectedItem.key;
-                vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
-                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
-                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
+            "use strict";
+            this.userProduct.color = this.couleurToShow[0].color;
+            this.productColor = this.couleurToShow[0].color;
+            this.selectedItem.visuel = computedVisual;
+            vm.selectedItemKey = vm.selectedItem.key;
+            vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
+            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
+            if (this.selectedItem.activateDiscount === true) {
+                return this.selectedItem.prix = parseFloat(this.selectedItem.prixpromotion).toFixed(2)
+            }
+            this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
         },
 
         /**
@@ -127,17 +131,23 @@ let vm = new Vue({
                         canvas: ""
                     })
                 })
-                this.showCurrentColorOfProduct()
+                console.log(vm.selectedItem)
+                if (vm.selectedItem.color !== undefined) {
+                    this.showCurrentColorOfProduct()
                     this.userProduct.color = this.couleurToShow[0].color;
                     this.productColor = this.couleurToShow[0].color;
-                    vm.selectedItemKey = vm.selectedItem.key;
-                    vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
-                    vm.visualIndex = 0;
-                    vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
-                    this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
-                    this.selectedItem.visuel = computedVisual;
-                    vm.userProduct.name = vm.selectedItem.nom;
-                    return vm.isLoaded = true;
+                }
+                vm.selectedItemKey = vm.selectedItem.key;
+                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
+                vm.visualIndex = 0;
+                vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
+                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
+                if (this.selectedItem.activateDiscount === true) {
+                    return this.selectedItem.prix = parseFloat(this.selectedItem.prixpromotion).toFixed(2)
+                }
+                this.selectedItem.visuel = computedVisual;
+                vm.userProduct.name = vm.selectedItem.nom;
+                return vm.isLoaded = true;
             })
         },
 
@@ -167,11 +177,9 @@ let vm = new Vue({
             vm.selectedItem.visuel[vm.visualIndex].computedCanvas = this.saveVisual();
             canvas.clear();
             vm.visualIndex++;
-            console.log(vm.indexOfImg, vm.visualIndex)
             if (vm.visualIndex > vm.indexOfImg) {
                 vm.visualIndex = 0;
             }
-            console.log(vm.visualIndex)
             $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].img);
             console.log(vm.selectedItem);
             try {
@@ -212,7 +220,7 @@ let vm = new Vue({
                     cornersize: 10,
                     hasRotatingPoint: true
                 });
-                console.log(image);
+                swal('', 'Si la résolution de votre image nous semble trop faible. Nos techniciens s\'occuperont de la remettre à l\'échelle', 'info')
                 canvas.add(image);
             });
         },
@@ -275,11 +283,11 @@ let vm = new Vue({
         /**
          * Affiche la liste des couleurs du produit selectionné par l'utilisateur
          */
-       async showCurrentColorOfProduct() {
-           this.couleurToShow = [];
-           await this.selectedItem.couleur.forEach(colorName => {
+        async showCurrentColorOfProduct() {
+            this.couleurToShow = [];
+            await this.selectedItem.couleur.forEach(colorName => {
                 let index = _.findIndex(this.colorList, {'nom': colorName});
-                if(index !== -1) {
+                if (index !== -1) {
                     this.couleurToShow.push({color: this.colorList[index].value})
                 }
             });
@@ -287,8 +295,6 @@ let vm = new Vue({
         }
     }
 });
-
-
 
 
 /**

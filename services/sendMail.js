@@ -33,7 +33,14 @@ function sendMail(mail, mailType) {
             from: '"[ImprimShirt] Support contact et réclamation"',
             to: mail.clientEmail,
             subject: '[ImprimShirt] Validation commande  : ' + mail.orderRef,
-            text: 'Nous vous confirmons la validation de votre commande numéro ' + mail.orderRef + ' Vous pouvez suivre son avancée sur votre interface de suivi de commande.'
+            text: 'Bonjour,\n' +
+            '\n' +
+            'Votre commande n° ' + mail.orderRef + ' vient d\'être validée.\n' +
+            'Nos services d\'expéditions se chargent de préparer votre colis.\n' +
+            'Vous pouvez dès à présent suivre l\'avancement de votre commande depuis votre espace client.\n' +
+            '\n' +
+            'Bien cordialement,\n' +
+            'L\'équipe ImprimShirt'
         };
     }
 

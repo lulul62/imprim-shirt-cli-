@@ -195,7 +195,7 @@
                                     <v-stepper-content step="3">
                                         <v-btn primary @click.native="convertCartToOrder()">
                                             <v-icon light>check_circle</v-icon>
-                                            Accéder au paiment
+                                            Accéder au paiement
                                         </v-btn>
                                         <v-btn warning @click.native="cancel()">
                                             <v-icon light>skip_previous</v-icon>
@@ -421,9 +421,7 @@
                     if (this.errorArray.length > 0) {
                         return swal('Erreur', 'Des informations sont manquantes : ' + this.errorArray.toString(), 'error');
                     }
-                    return this.$http.put(this.baseUrlCurrentUser + isConnected + ".json", this.currentUser).then((resp) => {
                         vm.e1 = 3;
-                    })
                 },
 
                 /**
@@ -449,16 +447,25 @@
                     }
                     delete this.currentUser.password;
                     delete this.currentUser.birthdate;
+                    let currentUser = {
+                        address: this.currentUser.address,
+                        city: this.currentUser.city,
+                        country: this.currentUser.country,
+                        email: this.currentUser.email,
+                        firstname: this.currentUser.firstname,
+                        name: this.currentUser.name,
+                        postalCode: this.currentUser.postalCode
+                    }
                     let order = {
                         reference: this.guid(),
-                        customerInformation: vm.currentUser,
+                        customerInformation: currentUser,
                         content: vm.cart,
                         order_date: new Date(),
                         state: "En cours de préparation"
                     }
                     this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function (resp) {
                         order.key = resp.body.name;
-                        this.$http.put('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key +  '.json', order).then(res => {
+                        this.$http.patch('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key +  '.json', order).then(res => {
                             let email = {
                                 orderRef : order.reference,
                                 clientEmail: order.customerInformation.email,
@@ -467,11 +474,13 @@
                             this.$http.post('http://localhost:3000/mail', email).then(success => {
                                 swal({
                                     title: 'Validation du paiement de votre commande',
-                                    text: "Votre commande est désormais en cours de préparation, vous pouvez consulter sa progression dans la section de suivi des commandes, un email de confirmation vous à été envoyé sur votre adresse email.",
+                                    text: "Votre commande est désormais en cours de préparation.\n" +
+                                    "Vous pouvez dès à présent consulter son état dans la section de suivi des commandes.\n" +
+                                    "Un email de confirmation vous a été envoyé sur votre adresse mail.",
                                     type: 'success',
                                     confirmButtonColor: '#3085d6',
                                     cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Consulter mon suivis de commande'
+                                    confirmButtonText: 'Consulter mon suivi de commande'
                                 }).then(function () {
                                     order = {};
                                     localStorage.removeItem('cart');

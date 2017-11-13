@@ -246,7 +246,7 @@
                                            value="Changer de produit">
                                     <!--						      </p>-->
                                 </div>
-                                <div class="well">
+                                <div  v-if="selectedItem.genre !== 'Doming'" class="well">
                                     <h5>Couleurs disponibles :</h5>
                                     <ul class="nav">
                                         <button class="color-preview" v-for="value in couleurToShow"
@@ -255,7 +255,7 @@
 
                                     </ul>
                                 </div>
-                                <div class="well">
+                                <div  v-if="selectedItem.genre !== 'Doming'" class="well">
                                     <!--					      	<h3>Tee Styles</h3>-->
                                     <!--						      <p>-->
                                     <h5>Taille :</h5>
@@ -353,7 +353,7 @@
                                                                                   value="#000000"></a>
                                 <!--- Background <input type="hidden" id="text-bgcolor" class="color-picker" size="7" value="#ffffff"> --->
                             </div>
-                            <div class="pull-right" align="" id="imageeditor">
+                            <div v-if="selectedItem.genre !== 'Doming'" class="pull-right" align="" id="imageeditor">
                                 <div style="z-index: 9999999999999999" class="btn-group">
                                     <button style="display: none" class="btn" id="bring-to-front" title="Envoyer le visuel à l'avant"><i
                                             class="icon-fast-backward rotate" style="height:19px;"></i></button>
@@ -375,8 +375,8 @@
                             <img id="tshirtFacing" v-bind:style="{background : userProduct.color}"
                                  v-bind:src="selectedItem.firstProductImg">
                             <div id="drawingArea"
-                                 style="position: absolute;top: 150px;left: 165px;z-index: 10;width: 150px;height: 150px;">
-                                <canvas id="tcanvas" width=200 height="150" class="hover"
+                                 style="position: absolute;top: 150px;left: 165px;z-index: 10;">
+                                <canvas v-if="selectedItem.genre !== 'Doming'" id="tcanvas" width=200 height="150" class="hover"
                                         style="-webkit-user-select: none; border: 1px solid black;"></canvas>
                             </div>
                         </div>
