@@ -376,7 +376,7 @@
                                  v-bind:src="selectedItem.firstProductImg">
                             <div id="drawingArea"
                                  style="position: absolute;top: 150px;left: 165px;z-index: 10;">
-                                <canvas v-if="selectedItem.genre !== 'Doming'" id="tcanvas" width=200 height="150" class="hover"
+                                <canvas v-show="selectedItem.genre !== 'Doming'" id="tcanvas" width=200 height="150" class="hover"
                                         style="-webkit-user-select: none; border: 1px solid black;"></canvas>
                             </div>
                         </div>

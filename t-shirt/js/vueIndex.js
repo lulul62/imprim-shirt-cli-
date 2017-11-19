@@ -88,7 +88,6 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
-            console.log(vm.selectedItem)
             this.showCurrentColorOfProduct()
             "use strict";
             this.userProduct.color = this.couleurToShow[0].color;
@@ -131,7 +130,7 @@ let vm = new Vue({
                         canvas: ""
                     })
                 })
-                console.log(vm.selectedItem)
+
                 if (vm.selectedItem.color !== undefined) {
                     this.showCurrentColorOfProduct()
                     this.userProduct.color = this.couleurToShow[0].color;
@@ -173,6 +172,8 @@ let vm = new Vue({
          * Ajuste la vue de l'utilisateur sur le visuel suivant
          */
         showOtherSideOfProduct: function () {
+            canvas.discardActiveObject();
+            canvas.renderAll();
             vm.selectedItem.visuel[vm.visualIndex].canvas = JSON.stringify(canvas);
             vm.selectedItem.visuel[vm.visualIndex].computedCanvas = this.saveVisual();
             canvas.clear();
@@ -180,8 +181,13 @@ let vm = new Vue({
             if (vm.visualIndex > vm.indexOfImg) {
                 vm.visualIndex = 0;
             }
+            if(vm.visualIndex === 2) {
+                $('#tcanvas').css('left', '-35px')
+            }
+            else {
+                $('#tcanvas').css('left', '0px')
+            }
             $("#tshirtFacing").attr("src", vm.selectedItem.visuel[vm.visualIndex].img);
-            console.log(vm.selectedItem);
             try {
                 var json = JSON.parse(vm.selectedItem.visuel[vm.visualIndex].canvas);
                 canvas.loadFromJSON(vm.selectedItem.visuel[vm.visualIndex].canvas);
@@ -220,6 +226,7 @@ let vm = new Vue({
                     cornersize: 10,
                     hasRotatingPoint: true
                 });
+
                 swal('', 'Si la résolution de votre image nous semble trop faible. Nos techniciens s\'occuperont de la remettre à l\'échelle', 'info')
                 canvas.add(image);
             });
@@ -239,13 +246,14 @@ let vm = new Vue({
          * @returns {*}
          */
         addProductToCart: function ($event) {
+            canvas.discardActiveObject();
+            canvas.renderAll();
             vm.userProduct.price = $("#price").text();
             vm.userProduct.size = $("#size")[0].value;
             vm.userProduct.gamme = vm.selectedItem.gamme;
             vm.userProduct.visual = vm.selectedItem.visuel;
             vm.userProduct.visual[vm.visualIndex].computedCanvas = this.saveVisual();
             vm.userProduct.gender = vm.selectedItem.genre;
-            console.log(vm.userProduct);
             this.checkBeforeAddToCart();
             if (vm.errorCart.length > 0) {
                 return swal('Oups :-(', 'Les informations suivantes sont manquantes : ' + vm.errorCart.toString(), 'error');
@@ -257,7 +265,6 @@ let vm = new Vue({
                     vm.currentCart = JSON.parse(vm.currentCart);
                 }
                 vm.currentCart.push(vm.userProduct);
-                console.log(vm.currentCart);
                 localStorage.setItem('cart', JSON.stringify(vm.currentCart));
                 swal({
                     title: '',
