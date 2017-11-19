@@ -88,18 +88,18 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
-            this.showCurrentColorOfProduct()
-            "use strict";
-            this.userProduct.color = this.couleurToShow[0].color;
-            this.productColor = this.couleurToShow[0].color;
-            this.selectedItem.visuel = computedVisual;
-            vm.selectedItemKey = vm.selectedItem.key;
-            vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
-            vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
-            if (this.selectedItem.activateDiscount === true) {
-                return this.selectedItem.prix = parseFloat(this.selectedItem.prixpromotion).toFixed(2)
-            }
-            this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
+            this.showCurrentColorOfProduct().then(res => {
+                this.userProduct.color = this.couleurToShow[0].color;
+                this.productColor = this.couleurToShow[0].color;
+                this.selectedItem.visuel = computedVisual;
+                vm.selectedItemKey = vm.selectedItem.key;
+                vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
+                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
+                if (this.selectedItem.activateDiscount === true) {
+                    return this.selectedItem.prix = parseFloat(this.selectedItem.prixpromotion).toFixed(2)
+                }
+                this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
+            })
         },
 
         /**
@@ -132,9 +132,10 @@ let vm = new Vue({
                 })
 
                 if (vm.selectedItem.color !== undefined) {
-                    this.showCurrentColorOfProduct()
-                    this.userProduct.color = this.couleurToShow[0].color;
-                    this.productColor = this.couleurToShow[0].color;
+                    this.showCurrentColorOfProduct().then(res => {
+                        this.userProduct.color = this.couleurToShow[0].color;
+                        this.productColor = this.couleurToShow[0].color;
+                    })
                 }
                 vm.selectedItemKey = vm.selectedItem.key;
                 vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
@@ -298,7 +299,7 @@ let vm = new Vue({
                     this.couleurToShow.push({color: this.colorList[index].value})
                 }
             });
-            return this.couleurToShow
+            await this.couleurToShow
         }
     }
 });
