@@ -376,8 +376,8 @@
                                  v-bind:src="selectedItem.firstProductImg">
                             <div id="drawingArea"
                                  style="position: absolute;top: 150px;left: 165px;z-index: 10;">
-                                <canvas v-show="selectedItem.genre !== 'Doming'" id="tcanvas" width=200 height="150" class="hover"
-                                        style="-webkit-user-select: none; border: 1px solid black;"></canvas>
+                                <canvas id="tcanvas" :width="width" :height="height" class="hover"
+                                        style="-webkit-user-select: none; border: 1px solid black"></canvas>
                             </div>
                         </div>
                     </div>
@@ -417,16 +417,15 @@
     </div><!-- /container -->
 
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 <script src='https://unpkg.com/vue/dist/vue.js'></script>
 <script src="https://cdn.jsdelivr.net/vue.resource/1.2.0/vue-resource.min.js"></script>
 <script src="https://unpkg.com/merge-images"></script>
-<script type="text/javascript" src="js/vueIndex.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.miniColors.min.js"></script>
 <script type="text/javascript" src="js/fabric.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 <script type="text/javascript" src="js/tshirtEditor.js"></script>
+<script type="text/javascript" src="js/vueIndex.js"></script>
 
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.8.0/sweetalert2.min.js"></script>

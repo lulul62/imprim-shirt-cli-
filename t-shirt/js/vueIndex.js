@@ -6,6 +6,8 @@ let vm = new Vue({
             baseurlcolor: "https://transfertprod-668c2.firebaseio.com/couleurList.json",
             productList: [],
             selectedItem: {},
+            width: '200',
+            height: '150',
             userProduct: {
                 color: "",
                 price: "",
@@ -131,12 +133,12 @@ let vm = new Vue({
                     })
                 })
 
-                if (vm.selectedItem.color !== undefined) {
                     this.showCurrentColorOfProduct().then(res => {
+                        console.log(res)
                         this.userProduct.color = this.couleurToShow[0].color;
                         this.productColor = this.couleurToShow[0].color;
                     })
-                }
+
                 vm.selectedItemKey = vm.selectedItem.key;
                 vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
                 vm.visualIndex = 0;
@@ -147,6 +149,23 @@ let vm = new Vue({
                 }
                 this.selectedItem.visuel = computedVisual;
                 vm.userProduct.name = vm.selectedItem.nom;
+                if (vm.selectedItem.genre === 'Doming') {
+                    console.log('je passe')
+                    this.height = 150
+                    this.width = 200
+                }
+                else {
+                    $('#tcanvas').css('left', '0px')
+                    $('#tcanvas').css('width', '200px')
+                    $('#tcanvas').css('height', '150px')
+                    $('#tcanvas').css('right', '0px')
+                    $('.upper-canvas').css('left', '0px')
+                    $('.upper-canvas').css('width', '200px')
+                    $('.upper-canvas').css('height', '150px')
+                    $('.upper-canvas').css('right', '0px')
+                    $('#tcanvas').css('top', '0px')
+                    $('.upper-canvas').css('top', '0px')
+                }
                 return vm.isLoaded = true;
             })
         },
@@ -182,7 +201,7 @@ let vm = new Vue({
             if (vm.visualIndex > vm.indexOfImg) {
                 vm.visualIndex = 0;
             }
-            if(vm.visualIndex === 2) {
+            if (vm.visualIndex === 2) {
                 $('#tcanvas').css('left', '-35px')
             }
             else {
@@ -236,8 +255,12 @@ let vm = new Vue({
 
         checkBeforeAddToCart: function () {
             vm.errorCart = [];
+            if (vm.userProduct.gender === 'Doming' || vm.userProduct.gender === 'Mug') {
+                return
+            }
             if (vm.userProduct.size === "") {
                 vm.errorCart.push(' Taille')
+
             }
         },
 
