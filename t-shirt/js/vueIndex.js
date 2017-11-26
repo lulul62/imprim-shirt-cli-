@@ -1,3 +1,5 @@
+var imgToShow;
+
 let vm = new Vue({
     el: "#app",
     data() {
@@ -11,10 +13,12 @@ let vm = new Vue({
             userProduct: {
                 color: "",
                 price: "",
+                gamme: '',
+                weight: '',
                 visual: {
                     shape: "",
                     design: "",
-                    fullsizeimage: ""
+                    fullsizeimage: []
                 },
                 text: "",
                 size: "",
@@ -90,11 +94,13 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
+            console.log(vm.selectedItem)
             this.showCurrentColorOfProduct().then(res => {
                 this.userProduct.color = this.couleurToShow[0].color;
                 this.productColor = this.couleurToShow[0].color;
                 this.selectedItem.visuel = computedVisual;
-                vm.selectedItemKey = vm.selectedItem.key;
+                this.userProduct.weight = this.selectedItem.poid,
+                    vm.selectedItemKey = vm.selectedItem.key;
                 vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
                 vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0].img;
                 if (this.selectedItem.activateDiscount === true) {
@@ -125,6 +131,7 @@ let vm = new Vue({
                 Object.keys(product.body).forEach(function (key) {
                     vm.selectedItem = product.body[key];
                 });
+                console.log(vm.selectedItem)
                 let computedVisual = [];
                 vm.selectedItem.visuel.forEach(visual => {
                     computedVisual.push({
@@ -133,14 +140,17 @@ let vm = new Vue({
                     })
                 })
 
-                    this.showCurrentColorOfProduct().then(res => {
-                        console.log(res)
-                        this.userProduct.color = this.couleurToShow[0].color;
-                        this.productColor = this.couleurToShow[0].color;
-                    })
+                this.showCurrentColorOfProduct().then(res => {
+                    this.userProduct.color = this.couleurToShow[0].color;
+                    this.productColor = this.couleurToShow[0].color;
+                })
 
                 vm.selectedItemKey = vm.selectedItem.key;
-                vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
+                this.userProduct.weight = this.selectedItem.poid,
+                    this.userProduct.gamme = "";
+                    this.userProduct.gamme = this.selectedItem.gamme,
+                    this.userProduct.gender = this.selectedItem.genre,
+                    vm.selectedItem.firstProductImg = vm.selectedItem.visuel[0];
                 vm.visualIndex = 0;
                 vm.getNumberOfVisualInProduct(vm.selectedItem.visuel);
                 this.selectedItem.prix = parseFloat(this.selectedItem.prix).toFixed(2);
@@ -148,23 +158,42 @@ let vm = new Vue({
                     return this.selectedItem.prix = parseFloat(this.selectedItem.prixpromotion).toFixed(2)
                 }
                 this.selectedItem.visuel = computedVisual;
-                vm.userProduct.name = vm.selectedItem.nom;
-                if (vm.selectedItem.genre === 'Doming') {
-                    console.log('je passe')
-                    this.height = 150
-                    this.width = 200
+                if (vm.userProduct.gamme === "Doming cercle 25mm") {
+                    swal('', "En commandant un objet " + vm.selectedItem.gamme + ' vous recevrez une feuille complète de 70 éléments sur une page A4', 'info')
+                    $('#tshirtFacing').css('width', '255px')
+                    $('#tshirtFacing').css('height', '205px')
+                    $('#tshirtFacing').css('position', 'relative')
+                    $('#tshirtFacing').css('top', '9em')
+                    $('#tshirtFacing').css('left', '10em')
+                    $('#shirtDiv').css('height', '480px')
                 }
-                else {
-                    $('#tcanvas').css('left', '0px')
-                    $('#tcanvas').css('width', '200px')
-                    $('#tcanvas').css('height', '150px')
-                    $('#tcanvas').css('right', '0px')
-                    $('.upper-canvas').css('left', '0px')
-                    $('.upper-canvas').css('width', '200px')
-                    $('.upper-canvas').css('height', '150px')
-                    $('.upper-canvas').css('right', '0px')
-                    $('#tcanvas').css('top', '0px')
-                    $('.upper-canvas').css('top', '0px')
+                if (vm.userProduct.gamme === "Doming cercle 50mm") {
+                    swal('', "En commandant un objet " + vm.selectedItem.gamme + ' vous recevrez une feuille complète de 15 éléments sur une page A4', 'info')
+                    $('#tshirtFacing').css('width', '255px')
+                    $('#tshirtFacing').css('height', '205px')
+                    $('#tshirtFacing').css('position', 'relative')
+                    $('#tshirtFacing').css('top', '9em')
+                    $('#tshirtFacing').css('left', '10em')
+                    $('#shirtDiv').css('height', '480px')
+                }
+                if (vm.userProduct.gamme === "Doming rectangle 60x20mm") {
+                    swal('', "En commandant un objet " + vm.selectedItem.gamme + ' vous recevrez une feuille complète de 39 éléments sur une page A4', 'info')
+                    $('#tshirtFacing').css('width', '223px')
+                    $('#tshirtFacing').css('height', '175px')
+                    $('#tshirtFacing').css('position', 'relative')
+                    $('#tshirtFacing').css('top', '10em')
+                    $('#tshirtFacing').css('left', '11em')
+                    $('#shirtDiv').css('height', '480px')
+                }
+                if (vm.selectedItem.genre !== "Doming") {
+                    console.log(vm.selectedItem.genre )
+                    $('#tshirtFacing').css('max-width', '100%')
+                    $('#tshirtFacing').css('height', 'auto')
+                    $('#tshirtFacing').css('position', '')
+                    $('#tshirtFacing').css('width', '')
+                    $('#tshirtFacing').css('top', '')
+                    $('#tshirtFacing').css('left', '')
+                    $('#shirtDiv').css('height', 'auto')
                 }
                 return vm.isLoaded = true;
             })
@@ -196,6 +225,7 @@ let vm = new Vue({
             canvas.renderAll();
             vm.selectedItem.visuel[vm.visualIndex].canvas = JSON.stringify(canvas);
             vm.selectedItem.visuel[vm.visualIndex].computedCanvas = this.saveVisual();
+            vm.selectedItem.visuel[vm.visualIndex].fullsizeimage = imgToShow
             canvas.clear();
             vm.visualIndex++;
             if (vm.visualIndex > vm.indexOfImg) {
@@ -225,7 +255,8 @@ let vm = new Vue({
          */
         addPersonnalVisual: function () {
             this.legalMention()
-            vm.userProduct.visual.fullsizeimage = $("#blah")[0].src;
+            vm.userProduct.visual.fullsizeimage.push($("#blah")[0].src);
+            imgToShow = $("#blah")[0].src;
             var offset = 50;
             var left = fabric.util.getRandomInt(0 + offset, 150 - offset);
             var top = fabric.util.getRandomInt(0 + offset, 150 - offset);
@@ -234,7 +265,7 @@ let vm = new Vue({
             var opacity = (function (min, max) {
                 return Math.random() * (max - min) + min;
             })(0.5, 1);
-            fabric.Image.fromURL(vm.userProduct.visual.fullsizeimage, function (image) {
+            fabric.Image.fromURL(imgToShow, function (image) {
                 image.set({
                     left: left,
                     top: top,
@@ -277,8 +308,10 @@ let vm = new Vue({
             vm.userProduct.gamme = vm.selectedItem.gamme;
             vm.userProduct.visual = vm.selectedItem.visuel;
             vm.userProduct.visual[vm.visualIndex].computedCanvas = this.saveVisual();
+            vm.selectedItem.visuel[vm.visualIndex].fullsizeimage = imgToShow
             vm.userProduct.gender = vm.selectedItem.genre;
             this.checkBeforeAddToCart();
+            console.log(this.userProduct)
             if (vm.errorCart.length > 0) {
                 return swal('Oups :-(', 'Les informations suivantes sont manquantes : ' + vm.errorCart.toString(), 'error');
             }

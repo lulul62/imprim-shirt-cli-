@@ -67,7 +67,8 @@
                                                         <v-toolbar-title>Nombre de produits : {{numberOfItem}}
                                                         </v-toolbar-title>
                                                         <v-spacer></v-spacer>
-
+                                                        <v-toolbar-title>Prix total (livraison incluse) : {{totalPriceWithDelivery}} €
+                                                        </v-toolbar-title>
                                                     </v-toolbar>
                                                     <v-list>
                                                         <v-list-group v-for="item in cart" :value="item.gamme"
@@ -87,7 +88,11 @@
                                                             </v-list-tile>
                                                             <template>
                                                                 <v-carousel :cycle="false" light hide-controls>
-                                                                    <v-carousel-item v-for="visual in item.visual" style="width: 325px" v-bind:style='{"background-color" : item.color}' v-bind:src="visual.img"><img id="canvas" style="{
+                                                                    <v-carousel-item v-for="visual in item.visual"
+                                                                                     style="width: 325px"
+                                                                                     v-bind:style='{"background-color" : item.color}'
+                                                                                     v-bind:src="visual.img"><img
+                                                                                id="canvas" style="{
     border: none;
     position: relative;
     bottom: 80px;
@@ -264,6 +269,7 @@
                 errorArray: [],
                 successUpdate: false,
                 errorForm: "",
+                totalPriceWithDelivery: '',
                 cart: [],
                 numberOfItem: 0,
                 showErrorForm: false,
@@ -281,15 +287,18 @@
                         vm.cart = JSON.parse(localStorage.getItem('cart'));
                         let sumOfProduct = [];
                         var canvas = document.getElementById('canvas');
-                        console.log(this.cart)
+                        let totalWeight = 0;
+                        let totalPrice = 0;
                         vm.cart.forEach((item) => {
-                            let price;
                             sumOfProduct.push(parseInt(item.quantity));
                             item.price = parseFloat(item.price).toFixed(2);
+                            totalWeight = totalWeight + parseFloat(item.weight)
+                            totalPrice = totalPrice + parseFloat(item.price)
                         })
-
+                        const deliveryPrice = estimateDeliveryPrice(totalWeight.toFixed(2));
+                        this.totalPriceWithDelivery = deliveryPrice + totalPrice
+                        this.totalPriceWithDelivery = this.totalPriceWithDelivery.toFixed(2)
                         vm.numberOfItem = _.sum(sumOfProduct);
-
 
 
                     }
@@ -361,9 +370,9 @@
                     catch (e) {
                     }
                     canvas.renderAll();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         canvas.calcOffset();
-                    },200);
+                    }, 200);
                 },
 
                 /**
@@ -421,7 +430,7 @@
                     if (this.errorArray.length > 0) {
                         return swal('Erreur', 'Des informations sont manquantes : ' + this.errorArray.toString(), 'error');
                     }
-                        vm.e1 = 3;
+                    vm.e1 = 3;
                 },
 
                 /**
@@ -460,14 +469,15 @@
                         reference: this.guid(),
                         customerInformation: currentUser,
                         content: vm.cart,
+                        totalPriceWithDelivery: this.totalPriceWithDelivery,
                         order_date: new Date(),
                         state: "En cours de préparation"
                     }
                     this.$http.post('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders.json', order).then(function (resp) {
                         order.key = resp.body.name;
-                        this.$http.patch('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key +  '.json', order).then(res => {
+                        this.$http.patch('https://transfertprod-668c2.firebaseio.com/user/' + isConnected + '/orders/' + order.key + '.json', order).then(res => {
                             let email = {
-                                orderRef : order.reference,
+                                orderRef: order.reference,
                                 clientEmail: order.customerInformation.email,
                                 type: 'order'
                             }
@@ -488,7 +498,7 @@
                                     window.location.href = '/orders'
                                 });
                             })
-                            })
+                        })
                     })
                 },
 
@@ -507,6 +517,125 @@
 
     }
     vm.checkEmptyCart();
+
+    /**
+     * Estimate delivery cost for an order
+     * @param weight
+     * @returns {number|*}
+     */
+    function estimateDeliveryPrice(weight) {
+        let deliveryPrice = 0;
+        const price = [4.72, 5.41, 6.10, 6.83, 7.41, 8.21, 9.01, 9.83, 10.63, 11.45, 12.25, 13.05, 13.87, 14.67, 15.49,
+            16.29, 17.10, 17.91, 18.71, 19.53, 20.33, 21.14, 21.95, 22.75, 23.57, 24.37, 25.18, 25.99, 26.79, 27.61, 28.41,
+            29.22, 30.03, 30.83];
+        const deliveryWeight = [0.25, 0.50, 0.75, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00, 11.00, 12.00,
+            13.00, 14.00, 15.00, 16.00, 17.00, 18.00,
+            19.00, 20.00, 21.00, 22.00, 23.00, 24.00, 25.00, 26.00, 27.00, 28.00, 29.00, 30.00];
+
+
+        if (weight < deliveryWeight[0]) {
+            return deliveryPrice = price[0];
+        }
+        if (weight >= deliveryWeight[0] && weight <= deliveryWeight[1]) {
+            return deliveryPrice = price[1];
+        }
+        if (weight >= deliveryWeight[1] && weight <= deliveryWeight[2]) {
+            return deliveryPrice = price[2];
+        }
+        if (weight >= deliveryWeight[2] && weight <= deliveryWeight[3]) {
+            return deliveryPrice = price[3];
+        }
+        if (weight >= deliveryWeight[3] && weight <= deliveryWeight[4]) {
+            return deliveryPrice = price[4];
+        }
+        if (weight >= deliveryWeight[4] && weight <= deliveryWeight[5]) {
+            return deliveryPrice = price[5];
+        }
+        if (weight >= deliveryWeight[5] && weight <= deliveryWeight[6]) {
+            return deliveryPrice = price[6];
+        }
+        if (weight >= deliveryWeight[6] && weight <= deliveryWeight[7]) {
+            return deliveryPrice = price[7];
+        }
+        if (weight >= deliveryWeight[7] && weight <= deliveryWeight[8]) {
+            return deliveryPrice = price[8];
+        }
+        if (weight >= deliveryWeight[8] && weight <= deliveryWeight[9]) {
+            return deliveryPrice = price[9];
+        }
+        if (weight >= deliveryWeight[9] && weight <= deliveryWeight[10]) {
+            return deliveryPrice = price[10];
+        }
+        if (weight >= deliveryWeight[10] && weight <= deliveryWeight[11]) {
+            return deliveryPrice = price[11];
+        }
+        if (weight >= deliveryWeight[11] && weight <= deliveryWeight[12]) {
+            return deliveryPrice = price[12];
+        }
+        if (weight >= deliveryWeight[12] && weight <= deliveryWeight[13]) {
+            return deliveryPrice = price[13];
+        }
+        if (weight >= deliveryWeight[13] && weight <= deliveryWeight[14]) {
+            return deliveryPrice = price[14];
+        }
+        if (weight >= deliveryWeight[14] && weight <= deliveryWeight[15]) {
+            return deliveryPrice = price[15];
+        }
+        if (weight >= deliveryWeight[15] && weight <= deliveryWeight[16]) {
+            return deliveryPrice = price[16];
+        }
+        if (weight >= deliveryWeight[16] && weight <= deliveryWeight[17]) {
+            return deliveryPrice = price[17];
+        }
+        if (weight >= deliveryWeight[17] && weight <= deliveryWeight[18]) {
+            return deliveryPrice = price[18];
+        }
+        if (weight >= deliveryWeight[18] && weight <= deliveryWeight[19]) {
+            return deliveryPrice = price[19];
+        }
+        if (weight >= deliveryWeight[19] && weight <= deliveryWeight[20]) {
+            return deliveryPrice = price[20];
+        }
+        if (weight >= deliveryWeight[20] && weight <= deliveryWeight[21]) {
+            return deliveryPrice = price[21];
+        }
+        if (weight >= deliveryWeight[21] && weight <= deliveryWeight[22]) {
+            return deliveryPrice = price[22];
+        }
+        if (weight >= deliveryWeight[22] && weight <= deliveryWeight[23]) {
+            return deliveryPrice = price[23];
+        }
+        if (weight >= deliveryWeight[23] && weight <= deliveryWeight[24]) {
+            return deliveryPrice = price[24];
+        }
+        if (weight >= deliveryWeight[24] && weight <= deliveryWeight[25]) {
+            return deliveryPrice = price[25];
+        }
+        if (weight >= deliveryWeight[25] && weight <= deliveryWeight[26]) {
+            return deliveryPrice = price[26];
+        }
+        if (weight >= deliveryWeight[26] && weight <= deliveryWeight[27]) {
+            return deliveryPrice = price[27];
+        }
+        if (weight >= deliveryWeight[27] && weight <= deliveryWeight[28]) {
+            return deliveryPrice = price[28];
+        }
+        if (weight >= deliveryWeight[28] && weight <= deliveryWeight[29]) {
+            return deliveryPrice = price[29];
+        }
+        if (weight >= deliveryWeight[29] && weight <= deliveryWeight[30]) {
+            return deliveryPrice = price[30];
+        }
+        if (weight >= deliveryWeight[30] && weight <= deliveryWeight[31]) {
+            return deliveryPrice = price[31];
+        }
+        if (weight >= deliveryWeight[31] && weight <= deliveryWeight[32]) {
+            return deliveryPrice = price[32];
+        }
+        if (weight > deliveryWeight[32]) {
+            deliveryPrice = price[32];
+        }
+    }
 </script>
 
 </body>

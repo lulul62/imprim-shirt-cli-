@@ -17,18 +17,6 @@ function sendMail(mail, mailType) {
         }
     });
 
-
-    if(mailType === "demands") {
-         mailOptions = {
-            from: '"[ImprimShirt] Support contact et réclamation"',
-            to: mail.demands.from,
-            subject: '[ImprimShirt] Réclamation commande : ' + mail.demands.orderReference,
-            html: 'Rappel de votre message : ' + mail.demands.message + '<br><br><br><br>' +
-            'Réponse du vendeur : ' + mail.message
-        };
-    }
-
-    else {
         mailOptions = {
             from: '"[ImprimShirt] Support contact et réclamation"',
             to: mail.clientEmail,
@@ -42,7 +30,6 @@ function sendMail(mail, mailType) {
             'Bien cordialement,\n' +
             'L\'équipe ImprimShirt'
         };
-    }
 
 
     transporter.sendMail(mailOptions, (error, info) => {

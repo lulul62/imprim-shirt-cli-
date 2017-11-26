@@ -237,7 +237,7 @@
                                     <!--					      	<h3>Tee Styles</h3>-->
                                     <!--						      <p>-->
                                     <h5>Produit :</h5>
-                                    <select class="mdb-select" v-model="selectedItemKey">
+                                    <select id="gammeName" class="mdb-select" v-model="selectedItemKey">
                                         <option value="1" selected="selected" v-bind:value="item.key"
                                                 v-for="item in productList">{{item.gamme}}
                                         </option>
@@ -386,7 +386,7 @@
                 <div class="span3">
                     <div style="position: relative;" class="well">
                         <h5>Quantité :</h5>
-                        <input type="text" v-model="userProduct.quantity" placeholder="" value="">
+                        <input type="number" v-model="userProduct.quantity" placeholder="" value="">
                         <h5>Prix</h5>
                         <p>
                         <table class="table">

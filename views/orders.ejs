@@ -84,7 +84,7 @@
                                     <template slot="items" scope="props">
                                         <td>{{ props.item.reference }}</td>
                                         <td class="text-xs-right">{{ props.item.order_date }}</td>
-                                        <td class="text-xs-right">{{ props.item.totalPrice }} €</td>
+                                        <td class="text-xs-right">{{ props.item.totalPriceWithDelivery }} €</td>
                                         <td class="text-xs-right">
                                             <v-btn @click.native="getCurrentOrder(props.item)" secondary light>
                                                 <div style="color: white;">VOIR</div>
@@ -92,14 +92,11 @@
                                             <template>
                                                 <v-layout row justify-center>
                                                     <v-dialog v-model="dialog" persistent width="320px"
-                                                              scrollable>
+                                                              :scrollable="true">
                                                         <v-card>
+                                                            <v-card-row height="400px">
                                                             <v-card-text>
-                                                                <v-container grid-list-md>
-                                                                    <v-layout wrap>
 
-
-                                                                        <template>
                                                                             <v-expansion-panel>
                                                                                 <v-expansion-panel-content
                                                                                         v-for="content in currentOrder.content">
@@ -162,11 +159,9 @@
 
                                                                                 </v-expansion-panel-content>
                                                                             </v-expansion-panel>
-                                                                        </template>
                                                                         <br>
-                                                                    </v-layout>
-                                                                </v-container>
                                                             </v-card-text>
+                                                            </v-card-row>
                                                             <v-card-actions>
                                                                 <v-spacer></v-spacer>
                                                                 <v-btn class="blue--text darken-1" flat
@@ -192,54 +187,6 @@
                 </v-container>
 
             </main>
-            <v-bottom-nav fixed :value="true" class="white">
-                <v-dialog width="500px" v-model="contactDialog">
-                    <v-btn slot="activator" flat color="teal" value="favorites">
-                        <span>Effectuer un réclamation</span>
-                        <v-icon>record_voice_over</v-icon>
-                    </v-btn>
-                    <v-card>
-                        <v-card-row>
-                            <v-card-title>Contact & réclamation</v-card-title>
-                        </v-card-row>
-                        <v-card-row>
-                            <v-card-text>
-                                <v-select
-                                        label="Séléctionner la référence commande"
-                                        required
-                                        v-model="contact.orderReference"
-                                        :items="orderReferenceArray"
-                                ></v-select>
-                                <v-select
-                                        label="Objet de la réclamation"
-                                        required
-                                        v-model="contact.category"
-                                        :items="['Etat de la livraison', 'Retour / défaut', 'Annuler la commande', 'Divers']"
-                                ></v-select>
-                                <v-text-field
-                                        name="input-7-4"
-                                        label="Message *"
-                                        v-model="contact.message"
-                                        value="Décrivez votre demande en détail..."
-                                        multi-line
-                                ></v-text-field>
-                                </v-flex>
-                                <small>* champs obligatoires</small>
-                            </v-card-text>
-                        </v-card-row>
-                        <v-card-row actions>
-                            <v-btn class="blue--text darken-1" flat @click.native="contactDialog = false, contact = {
-                    from: '',
-                    orderReference: '',
-                    category: '',
-                    message: ''
-                }">Annuler
-                            </v-btn>
-                            <v-btn class="blue--text darken-1" flat @click.native="sendDemands()">Envoyer</v-btn>
-                        </v-card-row>
-                    </v-card>
-                </v-dialog>
-            </v-bottom-nav>
         </template>
     </v-app>
 </div>
@@ -319,6 +266,10 @@
                 getCurrentUser: function () {
                     return this.$http.get(this.baseUrlCurrentUser + isConnected + ".json").then((currentUser) => {
                         this.currentUser = currentUser.data
+                        if(this.currentUser.orders === undefined) {
+                            this.dataLoaded = true
+                            return swal('', 'Vous ne possédez aucune commande en cours', 'error')
+                        }
                         Object.keys(currentUser.data.orders).forEach((key) => {
                             this.ordersTable.push(currentUser.data.orders[key]);
                         });
@@ -380,23 +331,6 @@
                     "use strict";
                     this.currentOrder = order;
                     this.dialog = true;
-                },
-
-                /**
-                 * Check du formulaire de contact
-                 */
-                checkDemandsForm() {
-                    console.log(this.contact)
-                    this.errorDemandsArray = []
-                    if (this.contact.orderReference === '') {
-                        this.errorDemandsArray.push('Référence commande')
-                    }
-                    if (this.contact.category === '') {
-                        this.errorDemandsArray.push('Catégorie de la réclamation')
-                    }
-                    if (this.contact.message === '') {
-                        this.errorDemandsArray.push('Message')
-                    }
                 }
             }
         });
