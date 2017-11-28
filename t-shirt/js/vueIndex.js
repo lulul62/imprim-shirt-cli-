@@ -94,7 +94,6 @@ let vm = new Vue({
                     canvas: ""
                 })
             })
-            console.log(vm.selectedItem)
             this.showCurrentColorOfProduct().then(res => {
                 this.userProduct.color = this.couleurToShow[0].color;
                 this.productColor = this.couleurToShow[0].color;
